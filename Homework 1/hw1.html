@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="hw1.js"></script>
+    <title>Statistics Homework 1</title>
+</head>
+<body>
+    <div class="container" style="text-align: center">
+        <h1>Statistics Homework 1</h1>
+        <canvas id="canvas" width="280" height="100"></canvas>
+    </div>
+    <script>  
+        const fd = new FigureDesigner(document.getElementById("canvas"));
+
+        fd.drawPoint(
+            x = 20, 
+            y = 50, 
+            thickness = 2, 
+            color = "red"
+        );
+
+        fd.drawLine(
+            startx = 50, 
+            starty = 50, 
+            endx = 100, 
+            endy = 50, 
+            color = "red"
+        );
+
+        fd.drawCircle(
+            x = 140, 
+            y = 50, 
+            thickness = 20, 
+            fillcolor = "red",
+            strokecolor = "red"
+        );
+
+        fd.drawRectangle(
+            x = 180, 
+            y = 30, 
+            width = 80, 
+            height = 40, 
+            fillcolor = "red",
+            strokecolor = "red"
+        );
+
+    </script>
+</body>
+</html>
