@@ -14,3 +14,19 @@ C:\Users\frays\OneDrive\Desktop\hw2\hw2\obj\Debug\net6.0-windows\refint\hw2.dll
 C:\Users\frays\OneDrive\Desktop\hw2\hw2\obj\Debug\net6.0-windows\hw2.pdb
 C:\Users\frays\OneDrive\Desktop\hw2\hw2\obj\Debug\net6.0-windows\hw2.genruntimeconfig.cache
 C:\Users\frays\OneDrive\Desktop\hw2\hw2\obj\Debug\net6.0-windows\ref\hw2.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\bin\Debug\net6.0-windows\hw2.exe
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\bin\Debug\net6.0-windows\hw2.deps.json
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\bin\Debug\net6.0-windows\hw2.runtimeconfig.json
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\bin\Debug\net6.0-windows\hw2.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\bin\Debug\net6.0-windows\hw2.pdb
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.Form1.resources
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.csproj.GenerateResource.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.AssemblyInfoInputs.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.AssemblyInfo.cs
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.csproj.CoreCompileInputs.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\refint\hw2.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.pdb
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\hw2.genruntimeconfig.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\hw2\hw2\obj\Debug\net6.0-windows\ref\hw2.dll

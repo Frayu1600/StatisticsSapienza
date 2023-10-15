@@ -6,7 +6,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace hw2
 {
-    public partial class Form1 
+    public partial class Form1
     {
         string[,] matrix;
         int numCols;
@@ -40,56 +40,7 @@ namespace hw2
             return matrix;
         }
 
-        private Dictionary<string, int> evalUnivariateDistribution(string var)
-        {
-            // get the column corresponding to the variable
-            int varCol = 0;
-            for (int j = 0; j < numCols; j++)
-            {
-                if (matrix[0, j] == var)
-                {
-                    varCol = j;
-                    break;
-                }
-            }
-
-            Dictionary<string, int> distribution = new Dictionary<string, int>();
-
-            string[] values;
-            string value;
-            for (int i = 1; i < numRows; i++)
-            {
-                values = matrix[i, varCol].ToLower().Trim('"').Trim(' ').Trim(',').Split(',');
-
-                for (int k = 0; k < values.Length; k++)
-                {
-                    value = values[k].Trim(' ');
-                    if (value == "")
-                    {
-                        if (!distribution.ContainsKey("no answer")) distribution["no answer"] = 0;
-
-                        distribution["no answer"]++;
-                        continue;
-                    }
-
-                    if (value == "-")
-                    {
-                        if (!distribution.ContainsKey("none")) distribution["none"] = 0;
-
-                        distribution["none"]++;
-                        continue;
-                    }
-
-                    if (!distribution.ContainsKey(value)) distribution[value] = 1;
-                    else distribution[value]++;
-                }
-            }
-
-            return distribution;
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonGetTsvFile_Click(object sender, EventArgs e)
         {
             matrix = ReadTsvFileIntoMatrix("Professional Life - Sheet1.tsv");
 
@@ -98,21 +49,21 @@ namespace hw2
 
             for (int j = 1; j < numCols; j++)
             {
-                comboBox1.Items.Add(matrix[0, j]);
+                comboBoxUnivaried.Items.Add(matrix[0, j]);
             }
 
-            button2.Enabled = true;
-            button3.Enabled = true;
-            comboBox1.Enabled = true;
-            comboBox1.SelectedIndex = 0;
+            buttonuUnivaried.Enabled = true;
+            buttonMultivaried.Enabled = true;
+            comboBoxUnivaried.Enabled = true;
+            comboBoxUnivaried.SelectedIndex = 0;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonUnivaried_Click(object sender, EventArgs e)
         {
             // TODO: make it so you can select these
-            string var = comboBox1.SelectedItem.ToString();
+            string[] var = { comboBoxUnivaried.SelectedItem.ToString() };
 
-            Dictionary<string, int> distribution = evalUnivariateDistribution(var);
+            Dictionary<string, int> distribution = evalDistribution(var);
             int entries = distribution.Values.Sum();
 
             textBox1.Text = "";
@@ -127,15 +78,14 @@ namespace hw2
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonMultivaried_Click(object sender, EventArgs e)
         {
-            string var1 = "Background (degree)";
-            string var2 = "Programming Languages";
-            string var3 = "Age";
+            string[] variables = textBoxMultivaried.Text.Split(',').Select(variable => variable.Trim()).ToArray();
 
-            string[] variables = { var1, var2, var3 };
+            if (variables[0] == "")
+                return;
 
-            Dictionary<string, int> jointDistribution = evalMultivariateDistribution(variables);
+            Dictionary<string, int> jointDistribution = evalDistribution(variables);
             int entries = jointDistribution.Values.Sum();
 
             textBox1.Text = "";
@@ -150,7 +100,8 @@ namespace hw2
             }
         }
 
-        private Dictionary<string, int> evalMultivariateDistribution(string[] variables)
+        // works for multivaried and univaried
+        private Dictionary<string, int> evalDistribution(string[] variables)
         {
             jointDistribution = new Dictionary<string, int>();
 
@@ -179,9 +130,9 @@ namespace hw2
                 }
 
                 var combinations = CartesianProduct(valuesMatrix);
-                foreach(var combination in combinations)
+                foreach (var combination in combinations)
                 {
-                    jointValue = String.Join(",", combination);
+                    jointValue = String.Join(", ", combination);
 
                     if (!jointDistribution.ContainsKey(jointValue)) jointDistribution[jointValue] = 1;
                     else jointDistribution[jointValue]++;
