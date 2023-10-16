@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\hw2\\hw2\\hw2.csproj",
+      "projectUniqueName": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\Frequency distributions\\hw2\\hw2.csproj",
       "projectName": "hw2",
-      "projectPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\hw2\\hw2\\hw2.csproj",
+      "projectPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\Frequency distributions\\hw2\\hw2.csproj",
       "packagesPath": "C:\\Users\\frays\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\hw2\\hw2\\obj\\",
+      "outputPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 2\\C#\\Frequency distributions\\hw2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

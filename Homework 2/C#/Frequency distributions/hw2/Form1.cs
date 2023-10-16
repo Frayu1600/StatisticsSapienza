@@ -64,6 +64,12 @@ namespace hw2
             string[] var = { comboBoxUnivaried.SelectedItem.ToString() };
 
             Dictionary<string, int> distribution = evalDistribution(var);
+
+            printDistribution(distribution);
+        }
+
+        private void printDistribution(Dictionary<string, int> distribution)
+        {
             int entries = distribution.Values.Sum();
 
             textBox1.Text = "";
@@ -76,6 +82,7 @@ namespace hw2
 
                 textBox1.Text += $"{kvp.Key}: \t {kvp.Value} ({relativeFreq} {percentage}%)\r\n";
             }
+
         }
 
         private void buttonMultivaried_Click(object sender, EventArgs e)
@@ -86,18 +93,8 @@ namespace hw2
                 return;
 
             Dictionary<string, int> jointDistribution = evalDistribution(variables);
-            int entries = jointDistribution.Values.Sum();
 
-            textBox1.Text = "";
-            decimal relativeFreq;
-            decimal percentage;
-            foreach (KeyValuePair<string, int> kvp in jointDistribution)
-            {
-                relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 2);
-                percentage = Math.Round(relativeFreq * 100, 2);
-
-                textBox1.Text += $"{kvp.Key}: \t {kvp.Value} ({relativeFreq} {percentage}%)\r\n";
-            }
+            printDistribution(jointDistribution);
         }
 
         // works for multivaried and univaried
@@ -142,10 +139,10 @@ namespace hw2
 
             return jointDistribution;
         }
-        private static IEnumerable<string[]> CartesianProduct<T>(T[][] items)
+        private static IEnumerable<string[]> CartesianProduct(string[][] items)
         {
             string[] currentItem = new string[items.Length];
-            static IEnumerable<string[]> Go(T[][] items, string[] currentItem, int index)
+            static IEnumerable<string[]> Go(string[][] items, string[] currentItem, int index)
             {
                 if (index == items.Length)
                 {
@@ -153,7 +150,7 @@ namespace hw2
                 }
                 else
                 {
-                    foreach (T item in items[index])
+                    foreach (string item in items[index])
                     {
                         currentItem[index] = item.ToString();
                         foreach (string[] j in Go(items, currentItem, index + 1))
