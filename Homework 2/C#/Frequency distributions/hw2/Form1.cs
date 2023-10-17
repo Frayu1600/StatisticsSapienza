@@ -137,7 +137,7 @@ namespace hw2
 
             }
 
-            return jointDistribution;
+            return jointDistribution.OrderByDescending(f => f.Value).ToDictionary(f => f.Key, f => f.Value);
         }
         private static IEnumerable<string[]> CartesianProduct(string[][] items)
         {

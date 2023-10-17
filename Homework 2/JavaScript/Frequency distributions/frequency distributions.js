@@ -79,7 +79,7 @@ function evalDistribution(variables) {
       });
     }
   
-    return jointDistribution;
+    return Object.fromEntries(Object.entries(jointDistribution).sort((a,b) => b[1] - a[1]));
   }
   
   function cartesianProduct(items) {
