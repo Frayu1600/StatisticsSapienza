@@ -1,0 +1,16 @@
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\bin\Debug\net6.0-windows\playing with uniform.exe
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\bin\Debug\net6.0-windows\playing with uniform.deps.json
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\bin\Debug\net6.0-windows\playing with uniform.runtimeconfig.json
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\bin\Debug\net6.0-windows\playing with uniform.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\bin\Debug\net6.0-windows\playing with uniform.pdb
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing_with_uniform.Form1.resources
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.csproj.GenerateResource.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.AssemblyInfoInputs.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.AssemblyInfo.cs
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.csproj.CoreCompileInputs.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\refint\playing with uniform.dll
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.pdb
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\playing with uniform.genruntimeconfig.cache
+C:\Users\frays\OneDrive\Documents\GitHub\StatisticsSapienza\Homework 2\C#\playing with uniform\playing with uniform\obj\Debug\net6.0-windows\ref\playing with uniform.dll

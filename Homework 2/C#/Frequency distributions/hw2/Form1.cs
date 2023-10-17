@@ -77,7 +77,7 @@ namespace hw2
             decimal percentage;
             foreach (KeyValuePair<string, int> kvp in distribution)
             {
-                relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 2);
+                relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 4);
                 percentage = Math.Round(relativeFreq * 100, 2);
 
                 textBox1.Text += $"{kvp.Key}: \t {kvp.Value} ({relativeFreq} {percentage}%)\r\n";
