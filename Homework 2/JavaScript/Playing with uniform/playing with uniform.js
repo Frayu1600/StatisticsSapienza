@@ -8,13 +8,17 @@ for(var i = 0; i < n; i++) {
 }
 
 interval = [];
-for(var i = 0; i < k; i++)
+for(var i = 0; i < k; i++) {
     interval.push(0);
+}
 
 
-for(var i = 0; i < n; i++) {
-    for(var j = 1; j <= k; j++) {
-        if(values[i] <= j/k) { 
+for(var i = 0; i < n; i++) 
+{
+    for(var j = 1; j <= k; j++) 
+    {
+        if(values[i] <= j/k) 
+        { 
             interval[j-1]++;
             break;
         }
@@ -22,4 +26,4 @@ for(var i = 0; i < n; i++) {
     }
 }
 
-console.table(interval);
+document.querySelector("#test").innerHTML = interval;

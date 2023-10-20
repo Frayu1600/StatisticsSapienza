@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\frays\\OneDrive\\Desktop\\hw1\\hw1\\hw1.csproj",
+      "projectUniqueName": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 1\\C#\\Playing with shapes\\hw1\\hw1.csproj",
       "projectName": "hw1",
-      "projectPath": "C:\\Users\\frays\\OneDrive\\Desktop\\hw1\\hw1\\hw1.csproj",
+      "projectPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 1\\C#\\Playing with shapes\\hw1\\hw1.csproj",
       "packagesPath": "C:\\Users\\frays\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\frays\\OneDrive\\Desktop\\hw1\\hw1\\obj\\",
+      "outputPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 1\\C#\\Playing with shapes\\hw1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
