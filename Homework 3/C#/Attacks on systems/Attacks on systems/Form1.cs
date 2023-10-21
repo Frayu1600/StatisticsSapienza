@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
@@ -7,14 +8,16 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private const int _ROWS = 20;
-        private const int _COLUMNS = 20;
+        private const int _ATTACKS = 30;
+
+        private const int _COLUMNS = _ATTACKS;
+        private const int _ROWS = _COLUMNS;
 
         private const int _CHART_HEIGHT = 300;
         private const int _CHART_WIDTH = 500;
         private const int _CORNER_SIZE = 10;
 
-        private float _UNIT = 0;
+        private float _UNIT = _CHART_HEIGHT / (float)_ROWS;
         enum chartType { PlusMinus, Freq, RelativeFreq, NormalizedFreq };
 
         private Bitmap bitmap;
@@ -48,8 +51,6 @@ namespace Attacks_on_systems
             rectangles[0] = new Rectangle(50, 50, _CHART_WIDTH, _CHART_HEIGHT);
             //rectangles[1] = new Rectangle(600, 50, _CHART_WIDTH, _CHART_HEIGHT);
 
-            _UNIT = _CHART_HEIGHT / (float)_ROWS;
-
             DrawRectangles();
         }
 
@@ -69,6 +70,8 @@ namespace Attacks_on_systems
                     {
                         x = rect.Left + i * (rect.Width / (float)_COLUMNS);
                         g.DrawLine(Pens.Gray, x, rect.Top, x, rect.Bottom);
+
+                        g.DrawString(i.ToString(), Font, Brushes.Black, x - 5, rect.Bottom + 5);
                     }
 
                     for (int i = 0; i <= _ROWS; i++)
@@ -100,7 +103,7 @@ namespace Attacks_on_systems
                     float x = rect.X;
                     float y;
 
-                    if (ct == chartType.PlusMinus) y = (rect.X + rect.Height) / 2;
+                    if (ct == chartType.PlusMinus) y = (rect.Bottom + rect.Top) / 2;
                     else y = rect.Bottom;
 
                     float previousx = x;
@@ -110,30 +113,28 @@ namespace Attacks_on_systems
                     g.FillRectangle(Brushes.Red, chartDot);
                     g.DrawRectangle(Pens.Red, chartDot);
 
-                    float attacks = 1;
+                    float attacks = 0;
                     // Plot graph
                     for (int i = 1; i <= _COLUMNS; i++)
                     {
                         x = rect.X + i * (rect.Width / (float)_COLUMNS);
 
                         generated = r.NextDouble();
-
                         if (generated < p)
                         {
                             switch (ct)
                             {
-                                case chartType.PlusMinus: y += _UNIT/2; break;
+                                case chartType.PlusMinus: y += _UNIT/2; score--; break;
                                 case chartType.Freq: y -= _UNIT; break;
                                 case chartType.RelativeFreq: y -= (_UNIT*4 / attacks); break;
                                 case chartType.NormalizedFreq: y -= (_UNIT*2.5f / (float)Math.Sqrt(attacks)); break;
                             }
-
                         }
                         else
                         {
                             switch (ct)
                             {
-                                case chartType.PlusMinus: y -= _UNIT/2; break;
+                                case chartType.PlusMinus: y -= _UNIT / 2; score++; break;
                                 case chartType.Freq: y -= 0; break;
                                 case chartType.RelativeFreq: y -= 0; break;
                                 case chartType.NormalizedFreq: y -= 0; break;
@@ -149,10 +150,15 @@ namespace Attacks_on_systems
                         previousx = x;
                         previousy = y;
                         attacks++;
+                        pictureBox.Refresh();
                     }
+
+                    // only works for PlusMinus
+                    g.DrawString(score.ToString(), Font, Brushes.Black, rect.Right + 5, y - 7);
+                    score = 0;
                 }
             }
-            pictureBox.Invalidate();
+            pictureBox.Refresh();
         }
 
         private Rectangle topLeftCornerDrag(Rectangle rect)
@@ -177,6 +183,7 @@ namespace Attacks_on_systems
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            timer1.Stop();
             if (IsMouseOnCorner(e.Location))
             {
                 startPoint = e.Location;
@@ -194,6 +201,7 @@ namespace Attacks_on_systems
         {
             if (isResizing)
             {
+                timer1.Stop();
                 int newWidth = rectangles[0].Width + e.X - startPoint.X;
                 int newHeight = rectangles[0].Height + e.Y - startPoint.Y;
                 rectangles[0] = new Rectangle(rectangles[0].X, rectangles[0].Y, newWidth, newHeight);
@@ -202,6 +210,7 @@ namespace Attacks_on_systems
             }
             else if (isMoving)
             {
+                timer1.Stop();
                 int deltaX = e.X - previousMouseLocation.X;
                 int deltaY = e.Y - previousMouseLocation.Y;
                 rectangles[0] = new Rectangle(rectangles[0].X + deltaX, rectangles[0].Y + deltaY, rectangles[0].Width, rectangles[0].Height);
@@ -212,6 +221,8 @@ namespace Attacks_on_systems
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
+            //_UNIT = (rectangles[0].Top - rectangles[0].Bottom) / (float)_ROWS;
+            timer1.Start();
             isResizing = false;
             isMoving = false;
         }
@@ -231,7 +242,7 @@ namespace Attacks_on_systems
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            simulateAttack(chartType.Freq);
+            simulateAttack(chartType.PlusMinus);
         }
     }
 }
