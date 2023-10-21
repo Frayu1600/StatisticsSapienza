@@ -1,32 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj": {}
+    "C:\\Users\\frays\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj": {}
   },
   "projects": {
-    "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj": {
+    "C:\\Users\\frays\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj",
+        "projectUniqueName": "C:\\Users\\frays\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj",
         "projectName": "Attacks on systems",
-        "projectPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj",
+        "projectPath": "C:\\Users\\frays\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\Attacks on systems.csproj",
         "packagesPath": "C:\\Users\\frays\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\frays\\OneDrive\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\obj\\",
+        "outputPath": "C:\\Users\\frays\\Documents\\GitHub\\StatisticsSapienza\\Homework 3\\C#\\Attacks on systems\\Attacks on systems\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
           "C:\\Users\\frays\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0-windows"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
         },
         "frameworks": {
           "net6.0-windows7.0": {
@@ -62,7 +57,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

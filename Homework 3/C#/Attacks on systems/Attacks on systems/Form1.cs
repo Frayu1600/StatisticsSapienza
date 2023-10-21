@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
@@ -6,22 +7,25 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private Bitmap bitmap;
-        private Rectangle[] rectangles;
-        private Rectangle chartGraph1;
-        private Rectangle chartGraph2; 
-        private int selectedRectangleIndex = -1;
-        private Point lastMousePos;
-
         private const int _ROWS = 20;
         private const int _COLUMNS = 20;
 
-        private const int _CHART_HEIGHT = 200;
-        private const int _CHART_WIDTH = 400;
-
-        enum chartType { a, b, c }
+        private const int _CHART_HEIGHT = 300;
+        private const int _CHART_WIDTH = 500;
+        private const int _CORNER_SIZE = 10;
 
         private float _UNIT = 0;
+        enum chartType { PlusMinus, Freq, RelativeFreq, NormalizedFreq };
+
+        private Bitmap bitmap;
+
+        private Rectangle[] rectangles;
+
+        private Point startPoint;
+        private Point previousMouseLocation;
+        private bool isResizing;
+        private bool isMoving;
+        private int rectSelectedIndex;
 
         private int score = 0;
         private double p = 0.5;
@@ -41,13 +45,10 @@ namespace Attacks_on_systems
         private void InitializeRectangles()
         {
             rectangles = new Rectangle[4];
-            
-            chartGraph1 = new Rectangle(50, 50, _CHART_WIDTH, _CHART_HEIGHT);
-            chartGraph2 = new Rectangle(600, 50, _CHART_WIDTH, _CHART_HEIGHT);
-            rectangles[0] = chartGraph1;
-            rectangles[1] = chartGraph2;    
+            rectangles[0] = new Rectangle(50, 50, _CHART_WIDTH, _CHART_HEIGHT);
+            //rectangles[1] = new Rectangle(600, 50, _CHART_WIDTH, _CHART_HEIGHT);
 
-            _UNIT = _CHART_HEIGHT / (float)_ROWS / 2;
+            _UNIT = _CHART_HEIGHT / (float)_ROWS;
 
             DrawRectangles();
         }
@@ -57,8 +58,8 @@ namespace Attacks_on_systems
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.White);
-                
-                foreach(Rectangle rect in rectangles)
+
+                foreach (Rectangle rect in rectangles)
                 {
                     g.FillRectangle(Brushes.WhiteSmoke, rect);
 
@@ -75,6 +76,11 @@ namespace Attacks_on_systems
                         y = rect.Bottom - i * (rect.Height / (float)_ROWS);
                         g.DrawLine(Pens.Gray, rect.Right, y, rect.Left, y);
                     }
+
+                    g.DrawRectangle(Pens.Gray, topLeftCornerDrag(rect));
+                    g.DrawRectangle(Pens.Gray, topRightCornerDrag(rect));
+                    g.DrawRectangle(Pens.Gray, bottomLeftCornerDrag(rect));
+                    g.DrawRectangle(Pens.Gray, bottomRightCornerDrag(rect));
                 }
             }
 
@@ -82,8 +88,7 @@ namespace Attacks_on_systems
             timer1.Start();
         }
 
-
-        private void simulateAttack()
+        private void simulateAttack(chartType ct)
         {
             Random r = new Random();
             double generated;
@@ -92,74 +97,141 @@ namespace Attacks_on_systems
             {
                 foreach (Rectangle rect in rectangles)
                 {
-                    float x = rect.Left;
-                    float y = rect.Bottom / 2;
+                    float x = rect.X;
+                    float y;
+
+                    if (ct == chartType.PlusMinus) y = (rect.X + rect.Height) / 2;
+                    else y = rect.Bottom;
 
                     float previousx = x;
                     float previousy = y;
+
+                    Rectangle chartDot = new Rectangle((int)x - 2, (int)y - 2, 5, 5);
+                    g.FillRectangle(Brushes.Red, chartDot);
+                    g.DrawRectangle(Pens.Red, chartDot);
+
+                    float attacks = 1;
                     // Plot graph
                     for (int i = 1; i <= _COLUMNS; i++)
                     {
-                        x = rect.Left + i * (rect.Width / (float)_COLUMNS);
+                        x = rect.X + i * (rect.Width / (float)_COLUMNS);
 
                         generated = r.NextDouble();
 
-                        if (generated < p) y += _UNIT;
-                        else y -= _UNIT;
+                        if (generated < p)
+                        {
+                            switch (ct)
+                            {
+                                case chartType.PlusMinus: y += _UNIT/2; break;
+                                case chartType.Freq: y -= _UNIT; break;
+                                case chartType.RelativeFreq: y -= (_UNIT*4 / attacks); break;
+                                case chartType.NormalizedFreq: y -= (_UNIT*2.5f / (float)Math.Sqrt(attacks)); break;
+                            }
+
+                        }
+                        else
+                        {
+                            switch (ct)
+                            {
+                                case chartType.PlusMinus: y -= _UNIT/2; break;
+                                case chartType.Freq: y -= 0; break;
+                                case chartType.RelativeFreq: y -= 0; break;
+                                case chartType.NormalizedFreq: y -= 0; break;
+                            }
+                        }
 
                         g.DrawLine(Pens.Red, previousx, previousy, x, y);
+
+                        chartDot = new Rectangle((int)x - 2, (int)y - 2, 5, 5);
+                        g.FillRectangle(Brushes.Red, chartDot);
+                        g.DrawRectangle(Pens.Red, chartDot);
+
                         previousx = x;
                         previousy = y;
+                        attacks++;
                     }
                 }
             }
             pictureBox.Invalidate();
         }
 
+        private Rectangle topLeftCornerDrag(Rectangle rect)
+        {
+            return new Rectangle(rect.Left - _CORNER_SIZE, rect.Top - _CORNER_SIZE, _CORNER_SIZE * 2, _CORNER_SIZE * 2);
+        }
+
+        private Rectangle topRightCornerDrag(Rectangle rect)
+        {
+            return new Rectangle(rect.Right - _CORNER_SIZE, rect.Top - _CORNER_SIZE, _CORNER_SIZE * 2, _CORNER_SIZE * 2);
+        }
+
+        private Rectangle bottomLeftCornerDrag(Rectangle rect)
+        {
+            return new Rectangle(rect.Left - _CORNER_SIZE, rect.Bottom - _CORNER_SIZE, _CORNER_SIZE * 2, _CORNER_SIZE * 2);
+        }
+
+        private Rectangle bottomRightCornerDrag(Rectangle rect)
+        {
+            return new Rectangle(rect.Right - _CORNER_SIZE, rect.Bottom - _CORNER_SIZE, _CORNER_SIZE * 2, _CORNER_SIZE * 2);
+        }
+
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            for (int i = 0; i < rectangles.Length; i++)
+            if (IsMouseOnCorner(e.Location))
             {
-                if (rectangles[i].Contains(e.Location))
-                {
-                    selectedRectangleIndex = i;
-                    lastMousePos = e.Location;
-                    break;
-                }
+                startPoint = e.Location;
+                isResizing = true;
+            }
+            else if (rectangles[0].Contains(e.Location))
+            {
+                startPoint = e.Location;
+                isMoving = true;
+                previousMouseLocation = e.Location;
             }
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (selectedRectangleIndex >= 0)
+            if (isResizing)
             {
-                timer1.Stop();
-                Rectangle rect = rectangles[selectedRectangleIndex];
-                int dx = e.X - lastMousePos.X;
-                int dy = e.Y - lastMousePos.Y;
-                rect.X += dx;
-                rect.Y += dy;
-                rectangles[selectedRectangleIndex] = rect;
-                lastMousePos = e.Location;
+                int newWidth = rectangles[0].Width + e.X - startPoint.X;
+                int newHeight = rectangles[0].Height + e.Y - startPoint.Y;
+                rectangles[0] = new Rectangle(rectangles[0].X, rectangles[0].Y, newWidth, newHeight);
+                startPoint = e.Location;
+                DrawRectangles();
+            }
+            else if (isMoving)
+            {
+                int deltaX = e.X - previousMouseLocation.X;
+                int deltaY = e.Y - previousMouseLocation.Y;
+                rectangles[0] = new Rectangle(rectangles[0].X + deltaX, rectangles[0].Y + deltaY, rectangles[0].Width, rectangles[0].Height);
+                previousMouseLocation = e.Location;
                 DrawRectangles();
             }
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            selectedRectangleIndex = -1;
-            timer1.Start();
+            isResizing = false;
+            isMoving = false;
+        }
+
+        private bool IsMouseOnCorner(Point mouseLocation)
+        {
+            Rectangle rect = rectangles[0];
+
+            return topLeftCornerDrag(rect).Contains(mouseLocation) || topRightCornerDrag(rect).Contains(mouseLocation) || bottomLeftCornerDrag(rect).Contains(mouseLocation) || bottomRightCornerDrag(rect).Contains(mouseLocation);
         }
 
         private void trackBarP_Scroll(object sender, EventArgs e)
         {
             p = (double)trackBarP.Value / 10;
-            labelP.Text = $"p = {p}"; 
+            labelP.Text = $"p = {p}";
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            simulateAttack();
+            simulateAttack(chartType.Freq);
         }
     }
 }

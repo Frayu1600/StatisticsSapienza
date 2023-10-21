@@ -40,9 +40,10 @@
             // pictureBox
             // 
             pictureBox.Dock = DockStyle.Bottom;
-            pictureBox.Location = new Point(0, 67);
+            pictureBox.Location = new Point(0, 53);
+            pictureBox.Margin = new Padding(3, 2, 3, 2);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(1301, 459);
+            pictureBox.Size = new Size(1138, 481);
             pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
@@ -52,9 +53,10 @@
             // 
             // trackBarP
             // 
-            trackBarP.Location = new Point(123, 5);
+            trackBarP.Location = new Point(108, 4);
+            trackBarP.Margin = new Padding(3, 2, 3, 2);
             trackBarP.Name = "trackBarP";
-            trackBarP.Size = new Size(166, 56);
+            trackBarP.Size = new Size(145, 45);
             trackBarP.TabIndex = 2;
             trackBarP.Value = 5;
             trackBarP.Scroll += trackBarP_Scroll;
@@ -67,20 +69,21 @@
             // labelP
             // 
             labelP.AutoSize = true;
-            labelP.Location = new Point(306, 18);
+            labelP.Location = new Point(268, 14);
             labelP.Name = "labelP";
-            labelP.Size = new Size(55, 20);
+            labelP.Size = new Size(43, 15);
             labelP.TabIndex = 3;
             labelP.Text = "p = 0.5";
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1301, 526);
+            ClientSize = new Size(1138, 534);
             Controls.Add(labelP);
             Controls.Add(trackBarP);
             Controls.Add(pictureBox);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
