@@ -14,14 +14,16 @@ namespace Attacks_on_systems
         private List<ResizeableRectangle> rrs;
         private Random r;
 
-        private bool isResizing;
-        private bool isMoving;
+        private List<bool> attacks;
 
-        public ResizeableRectangleManager(PictureBox pictureBox) { 
+        public ResizeableRectangleManager(PictureBox pictureBox)
+        {
             this.pictureBox = pictureBox;
 
             rrs = new List<ResizeableRectangle>();
             r = new Random();
+
+            attacks = new List<bool>();
         }
 
         public void DrawResizeableRectangles()
@@ -31,22 +33,32 @@ namespace Attacks_on_systems
             using (Graphics g = Graphics.FromImage(pictureBox.Image)) g.Clear(Color.White);
 
             foreach (ResizeableRectangle rr in rrs)
-                 rr.DrawChartOnBitmap();
+                rr.DrawChartOnBitmap();
         }
 
-        public void SimulateAttacks(double p, int attacks, Brush brush, Pen pen)
+        public void SimulateAttacks(double p, int nattacks, Brush brush, Pen pen)
         {
             if (rrs.Count == 0) return;
 
             double generated;
 
-            for (int i = 0; i < attacks; i++)
+            for (int i = 0; i < nattacks; i++)
             {
                 generated = r.NextDouble();
 
-                foreach (ResizeableRectangle rr in rrs)
-                    rr.SimulateAttack(p < generated, brush, pen);
-            }          
+                using (Graphics g = Graphics.FromImage(pictureBox.Image))
+                {
+                    g.Clear(Color.White);
+                    foreach (ResizeableRectangle rr in rrs)
+                    {
+                        rr.DrawChartOnBitmap();
+                        rr.ReSimulateAttacks(attacks, brush, pen);
+                        rr.SimulateAttack(p > generated, brush, pen);
+                    }
+                }              
+
+                this.attacks.Add(p > generated);
+            }
         }
 
         public void CreateResizeableRectangle(int x, int y, int _CHART_WIDTH, int _CHART_HEIGHT, int _ROWS, int _COLUMNS, int _CORNER_SIZE, chartType ct)
@@ -56,18 +68,8 @@ namespace Attacks_on_systems
 
         public void ResizeableRectangleManager_MouseUp(object? sender, MouseEventArgs e)
         {
-            isResizing = false;
-            isMoving = false;
-
             foreach (ResizeableRectangle rr in rrs)
                 rr.ResizeableRectangle_MouseUp(sender, e);
-
-            using (Graphics g = Graphics.FromImage(pictureBox.Image))
-            {
-                g.Clear(Color.White);
-                foreach (ResizeableRectangle rr in rrs)
-                    rr.DrawChartOnBitmap();
-            }
         }
 
         public void ResizeableRectangleManager_MouseDown(object? sender, MouseEventArgs e)
@@ -83,12 +85,15 @@ namespace Attacks_on_systems
 
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
-                if(e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left)
                 {
                     g.Clear(Color.White);
                     foreach (ResizeableRectangle rr in rrs)
+                    {
                         rr.DrawChartOnBitmap();
-                }     
+                        rr.ReSimulateAttacks(attacks, Brushes.Red, Pens.Red);
+                    }
+                }
             }
         }
     }

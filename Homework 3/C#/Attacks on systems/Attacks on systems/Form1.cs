@@ -9,7 +9,7 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private const int _ATTACKS = 15;
+        private const int _ATTACKS = 150;
 
         private const int _COLUMNS = _ATTACKS;
         private const int _ROWS = _COLUMNS;
@@ -53,7 +53,7 @@ namespace Attacks_on_systems
 
             rrm.SimulateAttacks(p, _ATTACKS, Brushes.Red, Pens.Red);
 
-            //timer1.Start();
+            timer1.Start();
         }
 
         private void PictureBox_MouseUp(object sender, MouseEventArgs e)

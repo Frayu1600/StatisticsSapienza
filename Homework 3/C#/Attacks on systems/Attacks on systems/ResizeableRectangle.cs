@@ -137,6 +137,8 @@ namespace Attacks_on_systems
                     g.DrawLine(Pens.Gray, rect.Right, y, rect.Left, y);
                 }
 
+                if (ct == chartType.PlusMinus) g.DrawLine(Pens.Red, rect.Left, HalfwayYPoint, rect.Right, HalfwayYPoint);
+
                 g.DrawRectangle(Pens.Gray, this.topLeftCorner);
                 g.DrawRectangle(Pens.Gray, this.topRightCorner);
                 g.DrawRectangle(Pens.Gray, this.bottomLeftCorner);
@@ -161,6 +163,21 @@ namespace Attacks_on_systems
             pictureBox.Invalidate();
         }
 
+        public void ReSimulateAttacks(List<bool> attacks, Brush brush, Pen pen)
+        {
+            this.x = rect.X;
+            this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
+
+            this.attacks = 0;
+            this.score = 0;
+
+            previousx = x;
+            previousy = y;
+
+            foreach (bool attack in attacks)
+                SimulateAttack(attack, brush, pen);
+        }
+
         public void SimulateAttack(bool penetrated, Brush brush, Pen pen)
         {
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
@@ -171,7 +188,7 @@ namespace Attacks_on_systems
 
                 x = rect.X + ++attacks * (rect.Width / (float)_COLUMNS);
 
-                if (penetrated)
+                if (!penetrated)
                 {
                     switch (ct)
                     {
@@ -202,7 +219,19 @@ namespace Attacks_on_systems
                 previousx = x;
                 previousy = y;
 
-                if (attacks == _COLUMNS) g.DrawString(score.ToString(), Control.DefaultFont, Brushes.Black, rect.Right + 5, y - 7);
+                if (attacks == _COLUMNS)
+                {
+                    g.DrawString(score.ToString(), Control.DefaultFont, Brushes.Black, rect.Right + 5, y - 7);
+
+                    this.x = rect.X;
+                    this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
+
+                    this.attacks = 0;
+                    this.score = 0;
+
+                    previousx = x;
+                    previousy = y;
+                }
             }
         }
         
