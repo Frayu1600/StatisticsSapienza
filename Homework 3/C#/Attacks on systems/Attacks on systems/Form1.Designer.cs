@@ -39,17 +39,14 @@
             // 
             // pictureBox
             // 
-            pictureBox.Dock = DockStyle.Bottom;
-            pictureBox.Location = new Point(0, 53);
+            pictureBox.Dock = DockStyle.Fill;
+            pictureBox.Location = new Point(0, 0);
             pictureBox.Margin = new Padding(3, 2, 3, 2);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(1138, 481);
-            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox.Size = new Size(1138, 880);
+            pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
-            pictureBox.MouseDown += pictureBox_MouseDown;
-            pictureBox.MouseMove += pictureBox_MouseMove;
-            pictureBox.MouseUp += pictureBox_MouseUp;
             // 
             // trackBarP
             // 
@@ -63,7 +60,7 @@
             // 
             // timer1
             // 
-            timer1.Interval = 1000;
+            timer1.Interval = 500;
             timer1.Tick += timer1_Tick;
             // 
             // labelP
@@ -79,7 +76,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1138, 534);
+            ClientSize = new Size(1138, 880);
             Controls.Add(labelP);
             Controls.Add(trackBarP);
             Controls.Add(pictureBox);
