@@ -60,7 +60,7 @@
             // 
             // timer1
             // 
-            timer1.Interval = 1000;
+            timer1.Interval = 250;
             timer1.Tick += timer1_Tick;
             // 
             // labelP
@@ -68,9 +68,9 @@
             labelP.AutoSize = true;
             labelP.Location = new Point(268, 14);
             labelP.Name = "labelP";
-            labelP.Size = new Size(43, 15);
+            labelP.Size = new Size(109, 15);
             labelP.TabIndex = 3;
-            labelP.Text = "p = 0.5";
+            labelP.Text = "p_penetration = 0.5";
             // 
             // Form1
             // 

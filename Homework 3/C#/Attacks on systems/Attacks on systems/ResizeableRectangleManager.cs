@@ -14,9 +14,11 @@ namespace Attacks_on_systems
         private List<ResizeableRectangle> rrs;
         private Random r;
 
+        private int _SYSTEMS_COUNT;
+
         private List<bool> attacks;
 
-        public ResizeableRectangleManager(PictureBox pictureBox)
+        public ResizeableRectangleManager(PictureBox pictureBox, int SYSTEMS_COUNT)
         {
             this.pictureBox = pictureBox;
 
@@ -24,6 +26,7 @@ namespace Attacks_on_systems
             r = new Random();
 
             attacks = new List<bool>();
+            this._SYSTEMS_COUNT = SYSTEMS_COUNT;
         }
 
         public void DrawResizeableRectangles()
@@ -45,17 +48,8 @@ namespace Attacks_on_systems
             for (int i = 0; i < nattacks; i++)
             {
                 generated = r.NextDouble();
-
-                using (Graphics g = Graphics.FromImage(pictureBox.Image))
-                {
-                    g.Clear(Color.White);
-                    foreach (ResizeableRectangle rr in rrs)
-                    {
-                        rr.DrawChartOnBitmap();
-                        rr.ReSimulateAttacks(attacks, brush, pen);
-                        rr.SimulateAttack(p > generated, brush, pen);
-                    }
-                }              
+                foreach (ResizeableRectangle rr in rrs)
+                    rr.SimulateAttack(p > generated, brush, pen, _SYSTEMS_COUNT);
 
                 this.attacks.Add(p > generated);
             }
@@ -91,7 +85,7 @@ namespace Attacks_on_systems
                     foreach (ResizeableRectangle rr in rrs)
                     {
                         rr.DrawChartOnBitmap();
-                        rr.ReSimulateAttacks(attacks, Brushes.Red, Pens.Red);
+                        rr.ReSimulateAttacks(attacks, Brushes.Red, Pens.Red, _SYSTEMS_COUNT);
                     }
                 }
             }
