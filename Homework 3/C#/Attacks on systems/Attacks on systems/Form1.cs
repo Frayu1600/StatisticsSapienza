@@ -10,7 +10,7 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private const int _ATTACKS = 25;
+        private const int _ATTACKS = 75;
 
         private const int _COLUMNS = _ATTACKS;
         private const int _ROWS = _COLUMNS;
@@ -19,7 +19,7 @@ namespace Attacks_on_systems
         private const int _CHART_WIDTH = 500;
         private const int _CORNER_SIZE = 10;
 
-        private const int _SYSTEMS_COUNT = 50;
+        private const int _SYSTEMS_COUNT = 20;
 
         private int x = 50;
         private int y = 100;
@@ -36,7 +36,7 @@ namespace Attacks_on_systems
             InitializeComponent();
             InitializeBitmap();
             InitializeRectangles();
-            InitializeTimer();
+            //InitializeTimer();
 
             pictureBox.MouseMove += PictureBox_MouseMove;
             pictureBox.MouseDown += PictureBox_MouseDown;
@@ -59,10 +59,10 @@ namespace Attacks_on_systems
         {
             rrm = new ResizeableRectangleManager(pictureBox, _SYSTEMS_COUNT);
 
-            //rrm.CreateResizeableRectangle(x, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.PlusMinus);
-            //rrm.CreateResizeableRectangle(x + 550, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.Freq);
-            rrm.CreateResizeableRectangle(x, y + 350, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.RelativeFreq);
-            rrm.CreateResizeableRectangle(x + 550, y + 350, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.NormalizedFreq);
+            rrm.CreateResizeableRectangle(x, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.PlusMinus);
+            rrm.CreateResizeableRectangle(x + 550, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.Freq);
+            rrm.CreateResizeableRectangle(x, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.RelativeFreq);
+            rrm.CreateResizeableRectangle(x + 550, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.NormalizedFreq);
 
             rrm.DrawResizeableRectangles();
         }
@@ -91,7 +91,7 @@ namespace Attacks_on_systems
         {
             Color randomColor = Color.FromArgb(r.Next(256), r.Next(256), r.Next(256));
 
-            rrm.SimulateAttacks(p, _ATTACKS, new SolidBrush(randomColor), new Pen(randomColor, 2));
+            rrm.SimulateAttacks(p, _ATTACKS, randomColor);
 
             if (systemsAttacked++ == _SYSTEMS_COUNT) timer1.Stop();
         }

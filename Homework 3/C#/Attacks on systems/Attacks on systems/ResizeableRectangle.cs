@@ -12,6 +12,17 @@ using System.Xml.Serialization;
 namespace Attacks_on_systems
 {
     public enum chartType { PlusMinus, Freq, RelativeFreq, NormalizedFreq };
+
+    internal class Result
+    {
+        public readonly Color color;
+        public readonly float result;
+        public Result(float result, Color color) {
+            this.color = color;
+            this.result = result;
+        }
+    }
+
     internal class ResizeableRectangle : PictureBox
     {
         private Rectangle rect;
@@ -29,7 +40,7 @@ namespace Attacks_on_systems
         private float score;
         private int attacks;
 
-        private List<float> results;
+        private List<Result> results;
 
         private float x;
         private float y;
@@ -64,7 +75,7 @@ namespace Attacks_on_systems
             this.x = rect.X;
             this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
 
-            this.results = new List<float>();
+            this.results = new List<Result>();
 
             this.previousx = x;
             this.previousy = y;
@@ -122,7 +133,6 @@ namespace Attacks_on_systems
         {
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
-
                 g.FillRectangle(Brushes.Transparent, rect);
 
                 float x, y;
@@ -132,7 +142,7 @@ namespace Attacks_on_systems
                     x = rect.Left + i * xStep;
                     g.DrawLine(Pens.LightGray, x, rect.Top, x, rect.Bottom);
 
-                    g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 5, rect.Bottom + 5);
+                    if(i % 5 == 0) g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 5, rect.Bottom + 5);
                 }
 
                 for (int i = 0; i <= _ROWS*2; i++)
@@ -143,32 +153,30 @@ namespace Attacks_on_systems
 
                 if (ct == chartType.PlusMinus) g.DrawLine(Pens.Red, rect.Left, HalfwayYPoint, rect.Right, HalfwayYPoint);
 
-                g.DrawRectangle(Pens.Gray, this.topLeftCorner);
-                g.DrawRectangle(Pens.Gray, this.topRightCorner);
-                g.DrawRectangle(Pens.Gray, this.bottomLeftCorner);
-                g.DrawRectangle(Pens.Gray, this.bottomRightCorner);
+                g.DrawRectangle(Pens.LightGray, this.topLeftCorner);
+                g.DrawRectangle(Pens.LightGray, this.topRightCorner);
+                g.DrawRectangle(Pens.LightGray, this.bottomLeftCorner);
+                g.DrawRectangle(Pens.LightGray, this.bottomRightCorner);
 
-                /*
+               
                 g.DrawString("Attacks",
                     Control.DefaultFont,
                     Brushes.Black,
                     this.HalfwayXPoint - (xStep / 2),
-                    rect.Bottom + (yStep / 1.5f)
+                    rect.Bottom + (5*yStep)
                 );
 
-                */
                 g.DrawString(ct.ToString(),
                     Control.DefaultFont,
                     Brushes.Black,
-                    this.HalfwayXPoint - (xStep / 2),
-                    rect.Top - (yStep / 1.5f)
-                 );
-               
+                    this.HalfwayXPoint - (xStep),
+                    rect.Top - (5*yStep)
+                 );      
             }
             pictureBox.Invalidate();
         }
 
-        public void ReSimulateAttacks(List<bool> attacks, Brush brush, Pen pen, int _SYSTEMS_COUNT)
+        public void ReSimulateAttacks(List<bool> attacks, int _SYSTEMS_COUNT)
         {
             this.x = rect.X;
             this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
@@ -176,45 +184,46 @@ namespace Attacks_on_systems
             this.attacks = 0;
             this.score = 0;
 
-            previousx = x;
-            previousy = y;
+            this.previousx = x;
+            this.previousy = y;
 
-            foreach (bool attack in attacks)
-                SimulateAttack(attack, brush, pen, _SYSTEMS_COUNT);
+            for(int i = 0; i < attacks.Count; i++)
+                SimulateAttack(attacks[i], results[i/_ROWS].color, _SYSTEMS_COUNT);
         }
 
         public void CreateHistogram(int _SYSTEMS_COUNT)
         {
             if (results.Count <= _SYSTEMS_COUNT) return;
 
-            float minScore = results.AsQueryable().Min();
-            float maxScore = results.AsQueryable().Max();
+            float minScore = results.Min(result => result.result);
+            float maxScore = results.Max(result => result.result);
 
             int boxes = Math.Max(5, results.Count/10);
 
-            float rect_width = rect.Width / boxes;
+            float histogramRectWidth = rect.Width / boxes;
 
             int[] intervals = new int[boxes];
             float intervalWidth = (maxScore - minScore) / intervals.Length;
             for (int i = 0; i < results.Count; i++)
             {
-                double intervalIndex = Math.Floor((results[i] - minScore) / intervalWidth);
-                if (intervalIndex >= intervals.Length)
-                {
-                    intervals[intervals.Length - 1]++;
-                }
-                else
-                {
-                    intervals[(int)intervalIndex]++;
-                }
+                double intervalIndex = Math.Floor((results[i].result - minScore) / intervalWidth);
+
+                if (intervalIndex >= intervals.Length) intervals[intervals.Length - 1]++;
+                else intervals[(int)intervalIndex]++;
             }
 
-            float basicx;
+            float histogramRectX;
             for (int i = 0; i < intervals.Length; i++)
             {
-                int basicy = rect.Height / Math.Abs(intervals.AsQueryable().Max());
-                basicx = rect.X + i * rect_width;
-                Rectangle histogramRect = new Rectangle((int)basicx, rect.Bottom - intervals[i] * basicy, (int)rect_width, intervals[i] * basicy);
+                int histogramRectY = rect.Height / Math.Abs(intervals.AsQueryable().Max());
+                histogramRectX = rect.X + i * histogramRectWidth;
+                Rectangle histogramRect = new Rectangle
+                (
+                    (int)histogramRectX, 
+                    rect.Bottom - intervals[i] * histogramRectY,
+                    (int)histogramRectWidth,
+                    intervals[i] * histogramRectY
+                );
 
                 using (Graphics g = Graphics.FromImage(pictureBox.Image))
                 {
@@ -226,13 +235,14 @@ namespace Attacks_on_systems
                     semiTransparentBrush.Dispose();
                 }
             }
-
-            pictureBox.Invalidate();
         }
 
         // returns the score at every step
-        public void SimulateAttack(bool penetrated, Brush brush, Pen pen, int _SYSTEMS_COUNT)
+        public void SimulateAttack(bool penetrated, Color color, int _SYSTEMS_COUNT)
         {
+            Brush brush = new SolidBrush(color);
+            Pen pen = new Pen(color, 2);
+
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
                 Rectangle chartDot = new Rectangle((int)x - 1, (int)y - 1, 2, 2);
@@ -248,7 +258,7 @@ namespace Attacks_on_systems
                         case chartType.PlusMinus: y -= yStep / 2; score++; break;
                         case chartType.Freq: y -= yStep; score++; break;
                         case chartType.RelativeFreq: y -= (yStep * 4 / attacks); score = (++score / (int)attacks); break;
-                        case chartType.NormalizedFreq: y -= (yStep * 2.5f / (float)Math.Sqrt(attacks)); score = (++score / (int)Math.Sqrt(attacks)); break;
+                        case chartType.NormalizedFreq: y -= (yStep * 4 / (float)Math.Sqrt(attacks)); score = (++score / (int)Math.Sqrt(attacks)); break;
                     }
                 }
                 else
@@ -279,7 +289,7 @@ namespace Attacks_on_systems
                     this.x = rect.X;
                     this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
 
-                    this.results.Add(score);
+                    this.results.Add(new Result(score, color));
 
                     CreateHistogram(_SYSTEMS_COUNT);
 
@@ -334,8 +344,6 @@ namespace Attacks_on_systems
             rect.Height = newHeight;
             yStep = newYStep;  
             xStep = newXStep;
-
-            DrawChartOnBitmap();
         }
     }
 }

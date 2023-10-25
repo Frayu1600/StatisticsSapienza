@@ -39,7 +39,7 @@ namespace Attacks_on_systems
                 rr.DrawChartOnBitmap();
         }
 
-        public void SimulateAttacks(double p, int nattacks, Brush brush, Pen pen)
+        public void SimulateAttacks(double p, int nattacks, Color color)
         {
             if (rrs.Count == 0) return;
 
@@ -49,7 +49,7 @@ namespace Attacks_on_systems
             {
                 generated = r.NextDouble();
                 foreach (ResizeableRectangle rr in rrs)
-                    rr.SimulateAttack(p > generated, brush, pen, _SYSTEMS_COUNT);
+                    rr.SimulateAttack(p > generated, color, _SYSTEMS_COUNT);
 
                 this.attacks.Add(p > generated);
             }
@@ -85,7 +85,7 @@ namespace Attacks_on_systems
                     foreach (ResizeableRectangle rr in rrs)
                     {
                         rr.DrawChartOnBitmap();
-                        rr.ReSimulateAttacks(attacks, Brushes.Red, Pens.Red, _SYSTEMS_COUNT);
+                        rr.ReSimulateAttacks(attacks, _SYSTEMS_COUNT);
                     }
                 }
             }
