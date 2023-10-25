@@ -12,9 +12,6 @@ namespace Attacks_on_systems
     {
         private const int _ATTACKS = 500;
 
-        private const int _COLUMNS = _ATTACKS;
-        private const int _ROWS = _COLUMNS;
-
         private const int _CHART_HEIGHT = 300;
         private const int _CHART_WIDTH = 500;
         private const int _CORNER_SIZE = 7;
@@ -59,10 +56,10 @@ namespace Attacks_on_systems
         {
             rrm = new ResizeableRectangleManager(pictureBox, _SYSTEMS_COUNT);
 
-            rrm.CreateResizeableRectangle(x, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.PlusMinus);
-            rrm.CreateResizeableRectangle(x + 550, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.Freq);
-            rrm.CreateResizeableRectangle(x, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.RelativeFreq);
-            rrm.CreateResizeableRectangle(x + 550, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, chartType.NormalizedFreq);
+            rrm.CreateResizeableRectangle(x, y, _CHART_WIDTH, _CHART_HEIGHT, _ATTACKS, _CORNER_SIZE, chartType.PlusMinus);
+            rrm.CreateResizeableRectangle(x + 550, y, _CHART_WIDTH, _CHART_HEIGHT, _ATTACKS, _CORNER_SIZE, chartType.Freq);
+            rrm.CreateResizeableRectangle(x, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ATTACKS, _CORNER_SIZE, chartType.RelativeFreq);
+            rrm.CreateResizeableRectangle(x + 550, y + 400, _CHART_WIDTH, _CHART_HEIGHT, _ATTACKS, _CORNER_SIZE, chartType.NormalizedFreq);
 
             rrm.DrawResizeableRectangles();
         }
@@ -95,7 +92,7 @@ namespace Attacks_on_systems
 
             if (systemsAttacked++ == _SYSTEMS_COUNT) timer1.Stop();
 
-            labelAttacks.Text = $"Simulation #{systemsAttacked} of {_SYSTEMS_COUNT}";
+            labelAttacks.Text = $"Simulating system #{systemsAttacked - 1} of {_SYSTEMS_COUNT}";
         }
     }
 }

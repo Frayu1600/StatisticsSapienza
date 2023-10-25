@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace Attacks_on_systems
 {
+    // the purpose of this class is to handle the interaction between ResizeableRectangle and the Form itself
     internal class ResizeableRectangleManager
     {
         private PictureBox pictureBox;
@@ -31,16 +32,21 @@ namespace Attacks_on_systems
 
         public void DrawResizeableRectangles()
         {
+            // safety check
             if (rrs.Count == 0) return;
 
+            // clean picturebox
             using (Graphics g = Graphics.FromImage(pictureBox.Image)) g.Clear(Color.White);
 
+            // draw every ResizeableRectangle
             foreach (ResizeableRectangle rr in rrs)
                 rr.DrawChartOnBitmap();
         }
 
+        // lets us simulate an arbitrary number of attacks using a specified color
         public void SimulateAttacks(double p, int nattacks, Color color)
         {
+            // safety check
             if (rrs.Count == 0) return;
 
             double generated;
@@ -48,6 +54,7 @@ namespace Attacks_on_systems
 
             for (int i = 0; i < nattacks; i++)
             {
+                // generate and simulate the attack
                 generated = r.NextDouble();
                 defended = p > generated;
                 foreach (ResizeableRectangle rr in rrs)
@@ -56,10 +63,9 @@ namespace Attacks_on_systems
                 this.attacks.Add(defended);
             }
         }
-
-        public void CreateResizeableRectangle(int x, int y, int _CHART_WIDTH, int _CHART_HEIGHT, int _ROWS, int _COLUMNS, int _CORNER_SIZE, chartType ct)
+        public void CreateResizeableRectangle(int x, int y, int _ATTACKS, int _ROWS, int _COLUMNS, int _CORNER_SIZE, chartType ct)
         {
-            rrs.Add(new ResizeableRectangle(x, y, _CHART_WIDTH, _CHART_HEIGHT, _ROWS, _COLUMNS, _CORNER_SIZE, ct, pictureBox));
+            rrs.Add(new ResizeableRectangle(x, y, _ATTACKS, _ROWS, _COLUMNS, _CORNER_SIZE, ct, pictureBox));
         }
 
         public void ResizeableRectangleManager_MouseUp(object? sender, MouseEventArgs e)

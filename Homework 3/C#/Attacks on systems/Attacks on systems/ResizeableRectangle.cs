@@ -13,6 +13,7 @@ namespace Attacks_on_systems
 {
     public enum chartType { PlusMinus, Freq, RelativeFreq, NormalizedFreq };
 
+    // used to redraw every attack when a chart is dragged or resized
     internal class Result
     {
         public readonly Color color;
@@ -25,52 +26,65 @@ namespace Attacks_on_systems
 
     internal class ResizeableRectangle : PictureBox
     {
+        // the rectangle actually drawn in the picturebox
         private Rectangle rect;
 
         private PictureBox pictureBox;
 
-        public float yStep;
-        public float xStep;
+        // scale factors
+        private float yStep;
+        private float xStep;
+        private float relativeAndNormalizedScaleFactor;
+        private int chartNumberDistanceFactor;
 
         public readonly chartType ct;
 
-        public readonly int _ROWS;
-        public readonly int _COLUMNS;
-        public readonly int _CORNER_SIZE;
+        // constants
+        private int _ROWS;
+        private int _COLUMNS;
+        private int _CORNER_SIZE;
+        private int _ATTACKS;
 
-        private int attacks;
+        // variables regarding the attack
+        private int attacksPerformed;
         private int penetrations;
-        private float score;
+        private float currentScore;
 
+        // used to redraw every attack when a chart is dragged or resized 
         private List<Result> results;
 
+        // coordinates for the drawing of lines for the attacks
         private float x;
         private float y;
         private float previousx;
         private float previousy;
 
+        // variables for the resizing/dragging of the rectangle
         private bool isResizing;
         private bool isMoving;
         private Point startPoint;
-
         private Point previousMouseLocation;
 
-        public ResizeableRectangle(int x, int y, int width, int height, int rows, int columns, int cornerSize, chartType ct, PictureBox pictureBox)
+        public ResizeableRectangle(int x, int y, int width, int height, int attacks, int cornerSize, chartType ct, PictureBox pictureBox)
         {
             this.rect = new Rectangle(x, y, width, height);
             this.ct = ct;
             this.pictureBox = pictureBox;
 
-            this._ROWS = rows;
-            this._COLUMNS = columns;
+            this._ATTACKS = attacks;
+            this._ROWS = attacks;
+            this._COLUMNS = _ROWS;
             this._CORNER_SIZE = cornerSize;
 
             this.yStep = height / (float)_ROWS;
             this.xStep = width / (float)_COLUMNS;
 
-            this.score = 0;
+            this.currentScore = 0;
             this.penetrations = 0;
-            this.attacks = 0;
+            this.attacksPerformed = 0;
+
+            this.chartNumberDistanceFactor = CalcChartNumberDistanceFactor();
+            this.relativeAndNormalizedScaleFactor = CalcRelativeAndNormalizedScaleFactor();
 
             this.isResizing = false;
             this.isMoving = false;
@@ -82,6 +96,29 @@ namespace Attacks_on_systems
 
             this.previousx = x;
             this.previousy = y;
+        }
+
+        private float CalcRelativeAndNormalizedScaleFactor()
+        {
+            switch (_ATTACKS)
+            {
+                case int n when n <= 10: return 1.5f;
+                case int n when n <= 20: return 2;
+                case int n when n <= 100: return 5;
+                default: return 10;
+            }
+        }
+
+        private int CalcChartNumberDistanceFactor()
+        {
+            switch (_ATTACKS)
+            {
+                case int n when n <= 10: return 1;
+                case int n when n <= 20: return 2;
+                case int n when n <= 100: return 10;
+                case int n when n <= 500: return 50;
+                default: return 100;
+            }
         }
 
         public void ResizeableRectangle_MouseUp(object? sender, MouseEventArgs e)
@@ -136,78 +173,96 @@ namespace Attacks_on_systems
         {
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
-                g.FillRectangle(Brushes.Transparent, rect);
-
                 float x, y;
 
-                for (int i = 0; i <= _COLUMNS; i++)
+                // draw the columns
+                for (int i = 0; i <= _COLUMNS; i += chartNumberDistanceFactor)
                 {
                     x = rect.Left + i * xStep;
+                    g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 5, rect.Bottom + 5);
                     g.DrawLine(Pens.LightGray, x, rect.Top, x, rect.Bottom);
-
-                    if(i % 50 == 0) g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 10, rect.Bottom + 5);
                 }
 
-                for (int i = 0; i <= _ROWS*2; i++)
+                // draw the rows
+                for (int i = 0; i <= _ROWS * 2; i += chartNumberDistanceFactor)
                 {
-                    y = rect.Bottom - i * yStep/2;
+                    y = rect.Bottom - i * yStep / 2;
                     g.DrawLine(Pens.LightGray, rect.Right, y, rect.Left, y);
                 }
 
+                // draw the zero line if we are using PlusMinus graph
                 if (ct == chartType.PlusMinus) g.DrawLine(Pens.Red, rect.Left, HalfwayYPoint, rect.Right, HalfwayYPoint);
 
+                // draw the resize squares
                 g.DrawRectangle(Pens.LightGray, this.topLeftCorner);
                 g.DrawRectangle(Pens.LightGray, this.topRightCorner);
                 g.DrawRectangle(Pens.LightGray, this.bottomLeftCorner);
                 g.DrawRectangle(Pens.LightGray, this.bottomRightCorner);
 
-               
+                // draw labels
                 g.DrawString("Attacks",
                     Control.DefaultFont,
                     Brushes.Black,
                     this.HalfwayXPoint - (xStep / 2),
-                    rect.Bottom + (5*yStep)
+                    rect.Bottom + (40*yStep)
                 );
-
                 g.DrawString(ct.ToString(),
                     Control.DefaultFont,
                     Brushes.Black,
-                    this.HalfwayXPoint - (xStep),
-                    rect.Top - (5*yStep)
+                    this.HalfwayXPoint - (2*xStep),
+                    rect.Top - (40*yStep)
                  );      
             }
             pictureBox.Invalidate();
         }
 
+        // resimulates every attack given a list of booleans (outcomes) and the systems count
         public void ReSimulateAttacks(List<bool> attacks, int _SYSTEMS_COUNT)
         {
+            ResetAllSimulationValues();
+
+            // resimulate every attack
+            for (int i = 0; i < attacks.Count; i++)
+                SimulateAttack(attacks[i], results[i/_ROWS].color, _SYSTEMS_COUNT);
+        }
+
+        // reset every simulation parameter
+        private void ResetAllSimulationValues()
+        {  
             this.x = rect.X;
             this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
 
-            this.attacks = 0;
-            this.score = 0;
+            this.attacksPerformed = 0;
+            this.currentScore = 0;
             this.penetrations = 0;
 
             this.previousx = x;
             this.previousy = y;
-
-            for(int i = 0; i < attacks.Count; i++)
-                SimulateAttack(attacks[i], results[i/_ROWS].color, _SYSTEMS_COUNT);
         }
 
+        // create the histogram
         public void CreateHistogram(int _SYSTEMS_COUNT)
         {
+            // draws histograms at the end of the simulation
             if (results.Count <= _SYSTEMS_COUNT) return;
 
+            // save min and max score as references
             float minScore = results.Min(result => result.result);
             float maxScore = results.Max(result => result.result);
 
+            // calculate the number of rectangles to draw
             int boxes = Math.Max(5, results.Count/10);
 
+            // scale factor
             float UIRectHeight = rect.Height / boxes;
 
+            // to calculate the height of every rectangle
             int[] intervals = new int[boxes];
+
+            // width of every rectangle
             float intervalWidth = (maxScore - minScore) / intervals.Length;
+
+            // add values to every interval accordingly
             for (int i = 0; i < results.Count; i++)
             {
                 double intervalIndex = Math.Floor((results[i].result - minScore) / intervalWidth);
@@ -216,21 +271,23 @@ namespace Attacks_on_systems
                 else intervals[(int)intervalIndex]++;
             }
 
+            // prepare the rectangles
             float histogramRectY;
+            int UIRectWidthUnit;
             for (int i = 0; i < intervals.Length; i++)
             {
-                int UIRectWidthUnit = rect.Width / Math.Abs(intervals.AsQueryable().Max());
+                // adjust the max height to avoid overflow
+                UIRectWidthUnit = rect.Width / Math.Abs(intervals.AsQueryable().Max()) / 2;
                 histogramRectY = rect.Y + i * UIRectHeight;
                 Rectangle histogramRect = new Rectangle
                 (
-                    //(int)histogramRectX - intervals[i] * UIRectWidthUnit, 
                     rect.Right - intervals[i] * UIRectWidthUnit,
-                    (int)histogramRectY,
-                    
+                    (int)histogramRectY,    
                     intervals[i] * UIRectWidthUnit,
                     (int)UIRectHeight
                 );
 
+                // actually draw the rectangles
                 using (Graphics g = Graphics.FromImage(pictureBox.Image))
                 {
                     Color semiTransparentColor = Color.FromArgb(128, Color.Red);
@@ -243,7 +300,7 @@ namespace Attacks_on_systems
             }
         }
 
-        // returns the score at every step
+        // simulate a single attack given the outcome of the attack itself
         public void SimulateAttack(bool defended, Color color, int _SYSTEMS_COUNT)
         {
             Brush brush = new SolidBrush(color);
@@ -251,61 +308,59 @@ namespace Attacks_on_systems
 
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
-                //Rectangle chartDot = new Rectangle((int)x - 1, (int)y - 1, 1, 1);
-                //g.FillRectangle(brush, chartDot);
-                //g.DrawRectangle(pen, chartDot);
-
-                x = rect.X + ++attacks * (rect.Width / (float)_COLUMNS);
+                x = rect.X + ++attacksPerformed * (rect.Width / (float)_COLUMNS);
 
                 if (!defended)
                 {
                     penetrations++;
                     switch (ct)
                     {
-                        case chartType.PlusMinus: y -= yStep / 2; score++; break;
-                        case chartType.Freq: y -= yStep; score++; break;
-                        case chartType.RelativeFreq: y -= (yStep * 5 / attacks); score += ((float)penetrations / (float)attacks); break;
-                        case chartType.NormalizedFreq: y -= (yStep * 5 / (float)Math.Sqrt(attacks)); score += (penetrations / (float)Math.Sqrt(attacks)); break;
+                        case chartType.PlusMinus: 
+                            y -= yStep / 2; 
+                            currentScore++; 
+                        break;
+                        case chartType.Freq: 
+                            y -= yStep; 
+                            currentScore++; 
+                        break;
+                        case chartType.RelativeFreq: 
+                            y -= (yStep * relativeAndNormalizedScaleFactor / attacksPerformed); 
+                            currentScore += ((float)penetrations / (float)attacksPerformed); 
+                        break;
+                        case chartType.NormalizedFreq: 
+                            y -= (yStep * relativeAndNormalizedScaleFactor / (float)Math.Sqrt(attacksPerformed)); 
+                            currentScore += (penetrations / (float)Math.Sqrt(attacksPerformed)); 
+                        break;
                     }
                 }
                 else
                 {
                     switch (ct)
                     {
-                        case chartType.PlusMinus: y += yStep / 2; score--; break;
+                        case chartType.PlusMinus: y += yStep / 2; currentScore--; break;
                         case chartType.Freq: y += 0; break;
                         case chartType.RelativeFreq: y += 0; break;
                         case chartType.NormalizedFreq: y += 0; break;
                      }
                 }
 
-                if(attacks == 1) g.DrawLine(pen, previousx, (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom, x, y);
+                // only on the first attack, draw the line to the first coordinate
+                if(attacksPerformed == 1) g.DrawLine(pen, previousx, (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom, x, y);
                 else g.DrawLine(pen, previousx, previousy, x, y);
 
-                //chartDot = new Rectangle((int)x - 1, (int)y - 1, 1, 1);
-                //g.FillRectangle(brush, chartDot);
-                //g.DrawRectangle(pen, chartDot);
-
+                // keep values for the next attack
                 previousx = x;
                 previousy = y;
 
-                if (attacks == _COLUMNS)
+                // this check is needed to avoid going past the last column of the graph
+                if (attacksPerformed == _COLUMNS)
                 {
-                    //g.DrawString(score.ToString(), Control.DefaultFont, Brushes.Black, rect.Right + 5, y - 7);
+                    ResetAllSimulationValues();
 
-                    this.x = rect.X;
-                    this.y = (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom;
+                    this.results.Add(new Result(currentScore, color));
 
-                    this.results.Add(new Result(score, color));
-
+                    // draw the histogram
                     CreateHistogram(_SYSTEMS_COUNT);
-
-                    this.attacks = 0;
-                    this.score = 0;
-                    this.penetrations = 0;
-
-                    previousx = x;
-                    previousy = y;
                 }
             }
             pictureBox.Invalidate();
@@ -344,6 +399,7 @@ namespace Attacks_on_systems
             set { }
         }
 
+        // updates the position of the rectangle following a resize/drag
         private void UpdatePosition(int X, int Y, int newWidth, int newHeight, float newYStep, float newXStep)
         {
             rect.X = X;

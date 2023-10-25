@@ -78,9 +78,9 @@
             labelAttacks.AutoSize = true;
             labelAttacks.Location = new Point(268, 34);
             labelAttacks.Name = "labelAttacks";
-            labelAttacks.Size = new Size(102, 15);
+            labelAttacks.Size = new Size(131, 15);
             labelAttacks.TabIndex = 4;
-            labelAttacks.Text = "Simulation #0 of ?";
+            labelAttacks.Text = "Simulating system # of ";
             // 
             // Form1
             // 
