@@ -355,9 +355,9 @@ namespace Attacks_on_systems
                 // this check is needed to avoid going past the last column of the graph
                 if (attacksPerformed == _COLUMNS)
                 {
-                    ResetAllSimulationValues();
-
                     this.results.Add(new Result(currentScore, color));
+
+                    ResetAllSimulationValues();
 
                     // draw the histogram
                     CreateHistogram(_SYSTEMS_COUNT);

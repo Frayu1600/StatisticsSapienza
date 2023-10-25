@@ -10,13 +10,13 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private const int _ATTACKS = 500;
+        private const int _ATTACKS = 50;
 
         private const int _CHART_HEIGHT = 300;
         private const int _CHART_WIDTH = 500;
         private const int _CORNER_SIZE = 7;
 
-        private const int _SYSTEMS_COUNT = 1000;
+        private const int _SYSTEMS_COUNT = 100;
 
         private int x = 50;
         private int y = 100;
@@ -87,7 +87,6 @@ namespace Attacks_on_systems
         private void timer1_Tick(object sender, EventArgs e)
         {
             Color randomColor = Color.FromArgb(r.Next(256), r.Next(256), r.Next(256));
-
             rrm.SimulateAttacks(p, _ATTACKS, randomColor);
 
             if (systemsAttacked++ == _SYSTEMS_COUNT) timer1.Stop();
