@@ -44,14 +44,16 @@ namespace Attacks_on_systems
             if (rrs.Count == 0) return;
 
             double generated;
+            bool defended;
 
             for (int i = 0; i < nattacks; i++)
             {
                 generated = r.NextDouble();
+                defended = p > generated;
                 foreach (ResizeableRectangle rr in rrs)
-                    rr.SimulateAttack(p > generated, color, _SYSTEMS_COUNT);
+                    rr.SimulateAttack(defended, color, _SYSTEMS_COUNT);
 
-                this.attacks.Add(p > generated);
+                this.attacks.Add(defended);
             }
         }
 

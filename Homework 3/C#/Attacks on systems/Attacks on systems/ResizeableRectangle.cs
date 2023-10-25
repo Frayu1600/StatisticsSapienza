@@ -37,8 +37,10 @@ namespace Attacks_on_systems
         public readonly int _ROWS;
         public readonly int _COLUMNS;
         public readonly int _CORNER_SIZE;
-        private float score;
+
         private int attacks;
+        private int penetrations;
+        private float score;
 
         private List<Result> results;
 
@@ -67,6 +69,7 @@ namespace Attacks_on_systems
             this.xStep = width / (float)_COLUMNS;
 
             this.score = 0;
+            this.penetrations = 0;
             this.attacks = 0;
 
             this.isResizing = false;
@@ -142,7 +145,7 @@ namespace Attacks_on_systems
                     x = rect.Left + i * xStep;
                     g.DrawLine(Pens.LightGray, x, rect.Top, x, rect.Bottom);
 
-                    if(i % 5 == 0) g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 5, rect.Bottom + 5);
+                    if(i % 50 == 0) g.DrawString(i.ToString(), Control.DefaultFont, Brushes.Black, x - 10, rect.Bottom + 5);
                 }
 
                 for (int i = 0; i <= _ROWS*2; i++)
@@ -183,6 +186,7 @@ namespace Attacks_on_systems
 
             this.attacks = 0;
             this.score = 0;
+            this.penetrations = 0;
 
             this.previousx = x;
             this.previousy = y;
@@ -200,7 +204,7 @@ namespace Attacks_on_systems
 
             int boxes = Math.Max(5, results.Count/10);
 
-            float histogramRectWidth = rect.Width / boxes;
+            float UIRectHeight = rect.Height / boxes;
 
             int[] intervals = new int[boxes];
             float intervalWidth = (maxScore - minScore) / intervals.Length;
@@ -212,17 +216,19 @@ namespace Attacks_on_systems
                 else intervals[(int)intervalIndex]++;
             }
 
-            float histogramRectX;
+            float histogramRectY;
             for (int i = 0; i < intervals.Length; i++)
             {
-                int histogramRectY = rect.Height / Math.Abs(intervals.AsQueryable().Max());
-                histogramRectX = rect.X + i * histogramRectWidth;
+                int UIRectWidthUnit = rect.Width / Math.Abs(intervals.AsQueryable().Max());
+                histogramRectY = rect.Y + i * UIRectHeight;
                 Rectangle histogramRect = new Rectangle
                 (
-                    (int)histogramRectX, 
-                    rect.Bottom - intervals[i] * histogramRectY,
-                    (int)histogramRectWidth,
-                    intervals[i] * histogramRectY
+                    //(int)histogramRectX - intervals[i] * UIRectWidthUnit, 
+                    rect.Right - intervals[i] * UIRectWidthUnit,
+                    (int)histogramRectY,
+                    
+                    intervals[i] * UIRectWidthUnit,
+                    (int)UIRectHeight
                 );
 
                 using (Graphics g = Graphics.FromImage(pictureBox.Image))
@@ -238,27 +244,28 @@ namespace Attacks_on_systems
         }
 
         // returns the score at every step
-        public void SimulateAttack(bool penetrated, Color color, int _SYSTEMS_COUNT)
+        public void SimulateAttack(bool defended, Color color, int _SYSTEMS_COUNT)
         {
             Brush brush = new SolidBrush(color);
             Pen pen = new Pen(color, 2);
 
             using (Graphics g = Graphics.FromImage(pictureBox.Image))
             {
-                Rectangle chartDot = new Rectangle((int)x - 1, (int)y - 1, 2, 2);
-                g.FillRectangle(brush, chartDot);
-                g.DrawRectangle(pen, chartDot);
+                //Rectangle chartDot = new Rectangle((int)x - 1, (int)y - 1, 1, 1);
+                //g.FillRectangle(brush, chartDot);
+                //g.DrawRectangle(pen, chartDot);
 
                 x = rect.X + ++attacks * (rect.Width / (float)_COLUMNS);
 
-                if (!penetrated)
+                if (!defended)
                 {
+                    penetrations++;
                     switch (ct)
                     {
                         case chartType.PlusMinus: y -= yStep / 2; score++; break;
                         case chartType.Freq: y -= yStep; score++; break;
-                        case chartType.RelativeFreq: y -= (yStep * 4 / attacks); score = (++score / (int)attacks); break;
-                        case chartType.NormalizedFreq: y -= (yStep * 4 / (float)Math.Sqrt(attacks)); score = (++score / (int)Math.Sqrt(attacks)); break;
+                        case chartType.RelativeFreq: y -= (yStep * 5 / attacks); score += ((float)penetrations / (float)attacks); break;
+                        case chartType.NormalizedFreq: y -= (yStep * 5 / (float)Math.Sqrt(attacks)); score += (penetrations / (float)Math.Sqrt(attacks)); break;
                     }
                 }
                 else
@@ -275,9 +282,9 @@ namespace Attacks_on_systems
                 if(attacks == 1) g.DrawLine(pen, previousx, (ct == chartType.PlusMinus) ? HalfwayYPoint : rect.Bottom, x, y);
                 else g.DrawLine(pen, previousx, previousy, x, y);
 
-                chartDot = new Rectangle((int)x - 1, (int)y - 1, 2, 2);
-                g.FillRectangle(brush, chartDot);
-                g.DrawRectangle(pen, chartDot);
+                //chartDot = new Rectangle((int)x - 1, (int)y - 1, 1, 1);
+                //g.FillRectangle(brush, chartDot);
+                //g.DrawRectangle(pen, chartDot);
 
                 previousx = x;
                 previousy = y;
@@ -295,6 +302,7 @@ namespace Attacks_on_systems
 
                     this.attacks = 0;
                     this.score = 0;
+                    this.penetrations = 0;
 
                     previousx = x;
                     previousy = y;

@@ -33,6 +33,7 @@
             trackBarP = new TrackBar();
             timer1 = new System.Windows.Forms.Timer(components);
             labelP = new Label();
+            labelAttacks = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarP).BeginInit();
             SuspendLayout();
@@ -44,7 +45,7 @@
             pictureBox.Margin = new Padding(3, 2, 3, 2);
             pictureBox.Name = "pictureBox";
             pictureBox.Size = new Size(1138, 880);
-            pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             // 
@@ -72,11 +73,21 @@
             labelP.TabIndex = 3;
             labelP.Text = "p_penetration = 0.5";
             // 
+            // labelAttacks
+            // 
+            labelAttacks.AutoSize = true;
+            labelAttacks.Location = new Point(268, 34);
+            labelAttacks.Name = "labelAttacks";
+            labelAttacks.Size = new Size(102, 15);
+            labelAttacks.TabIndex = 4;
+            labelAttacks.Text = "Simulation #0 of ?";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1138, 880);
+            Controls.Add(labelAttacks);
             Controls.Add(labelP);
             Controls.Add(trackBarP);
             Controls.Add(pictureBox);
@@ -95,5 +106,6 @@
         private TrackBar trackBarP;
         private System.Windows.Forms.Timer timer1;
         private Label labelP;
+        private Label labelAttacks;
     }
 }

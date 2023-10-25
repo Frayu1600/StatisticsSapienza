@@ -10,16 +10,16 @@ namespace Attacks_on_systems
 {
     public partial class Form1 : Form
     {
-        private const int _ATTACKS = 75;
+        private const int _ATTACKS = 500;
 
         private const int _COLUMNS = _ATTACKS;
         private const int _ROWS = _COLUMNS;
 
         private const int _CHART_HEIGHT = 300;
         private const int _CHART_WIDTH = 500;
-        private const int _CORNER_SIZE = 10;
+        private const int _CORNER_SIZE = 7;
 
-        private const int _SYSTEMS_COUNT = 20;
+        private const int _SYSTEMS_COUNT = 1000;
 
         private int x = 50;
         private int y = 100;
@@ -36,7 +36,7 @@ namespace Attacks_on_systems
             InitializeComponent();
             InitializeBitmap();
             InitializeRectangles();
-            //InitializeTimer();
+            InitializeTimer();
 
             pictureBox.MouseMove += PictureBox_MouseMove;
             pictureBox.MouseDown += PictureBox_MouseDown;
@@ -46,7 +46,7 @@ namespace Attacks_on_systems
         private void InitializeTimer()
         {
             r = new Random();
-            timer1.Interval = 100;
+            timer1.Interval = 10;
             timer1.Start();
         }
 
@@ -94,6 +94,8 @@ namespace Attacks_on_systems
             rrm.SimulateAttacks(p, _ATTACKS, randomColor);
 
             if (systemsAttacked++ == _SYSTEMS_COUNT) timer1.Stop();
+
+            labelAttacks.Text = $"Simulation #{systemsAttacked} of {_SYSTEMS_COUNT}";
         }
     }
 }
