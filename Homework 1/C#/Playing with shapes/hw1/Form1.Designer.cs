@@ -1,6 +1,6 @@
 ﻿namespace hw1
 {
-    partial class Form1 : Form
+    partial class Form1
     {
         /// <summary>
         ///  Required designer variable.
@@ -20,32 +20,6 @@
             base.Dispose(disposing);
         }
 
-        private void DrawShapes(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            Pen redPen = new Pen(Color.Red, 2);
-            Brush redBrush = new SolidBrush(Color.Red);
-
-            // Draw a point
-            g.FillEllipse(redBrush, 20, 80, 10, 10);
-            g.DrawEllipse(redPen, 20, 80, 10, 10);
-
-            // Draw line
-            g.DrawLine(redPen, 40, 85, 100, 85);
-
-            // Draw circle
-            g.FillEllipse(redBrush, 120, 75, 40, 40);
-            g.DrawEllipse(redPen, 120, 75, 40, 40);
-
-            // Draw rectangle
-            g.FillRectangle(redBrush, 180, 70, 80, 50);
-            g.DrawRectangle(redPen, 180, 70, 80, 50);
-
-
-            redPen.Dispose();
-            redBrush.Dispose();
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -54,12 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Text = "Fun Shapes";
-            this.Size = new Size(400, 200);
-            CenterToScreen();
-            this.Paint += DrawShapes;
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(12, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(360, 137);
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
+            // 
+            // Form1
+            // 
+            ClientSize = new Size(384, 161);
+            Controls.Add(pictureBox1);
+            Name = "Form1";
+            Text = "Fun Shapes";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox pictureBox1;
     }
 }

@@ -23,10 +23,10 @@ namespace Attacks_on_systems
         {
             this.pictureBox = pictureBox;
 
-            rrs = new List<ResizeableRectangle>();
-            r = new Random();
+            this.rrs = new List<ResizeableRectangle>();
+            this.r = new Random();
 
-            attacks = new List<bool>();
+            this.attacks = new List<bool>();
             this._SYSTEMS_COUNT = SYSTEMS_COUNT;
         }
 

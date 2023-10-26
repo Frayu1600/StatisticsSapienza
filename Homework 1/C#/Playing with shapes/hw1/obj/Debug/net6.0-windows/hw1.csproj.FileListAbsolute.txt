@@ -14,3 +14,19 @@ C:\Users\frays\OneDrive\Desktop\hw1\hw1\obj\Debug\net6.0-windows\refint\hw1.dll
 C:\Users\frays\OneDrive\Desktop\hw1\hw1\obj\Debug\net6.0-windows\hw1.pdb
 C:\Users\frays\OneDrive\Desktop\hw1\hw1\obj\Debug\net6.0-windows\hw1.genruntimeconfig.cache
 C:\Users\frays\OneDrive\Desktop\hw1\hw1\obj\Debug\net6.0-windows\ref\hw1.dll
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\bin\Debug\net6.0-windows\hw1.exe
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\bin\Debug\net6.0-windows\hw1.deps.json
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\bin\Debug\net6.0-windows\hw1.runtimeconfig.json
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\bin\Debug\net6.0-windows\hw1.dll
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\bin\Debug\net6.0-windows\hw1.pdb
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.Form1.resources
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.csproj.GenerateResource.cache
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.AssemblyInfoInputs.cache
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.AssemblyInfo.cs
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.csproj.CoreCompileInputs.cache
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.dll
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\refint\hw1.dll
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.pdb
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\hw1.genruntimeconfig.cache
+C:\Users\frays\Documents\GitHub\StatisticsSapienza\Homework 1\C#\Playing with shapes\hw1\obj\Debug\net6.0-windows\ref\hw1.dll
