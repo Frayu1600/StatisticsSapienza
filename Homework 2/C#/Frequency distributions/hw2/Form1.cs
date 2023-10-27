@@ -2,15 +2,30 @@ using System;
 using System.Diagnostics.Eventing.Reader;
 using System.DirectoryServices;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace hw2
 {
+    public partial class Variable {
+
+        public readonly string label;
+        public readonly bool isQuantitative;
+        public Variable(string label, bool isQuantitative)
+        {
+            this.label = label;
+            this.isQuantitative = isQuantitative;
+        }
+    }
+
     public partial class Form1
     {
-        string[,] matrix;
-        int numCols;
-        int numRows;
+        private string[][] matrix;
+        private int numCols;
+        private int numRows;
+
+        //private Variable[] variables;
+        private string[] variables;
 
         Dictionary<string, int> jointDistribution;
         public Form1()
@@ -18,24 +33,28 @@ namespace hw2
             InitializeComponent();
         }
 
-        private string[,] ReadTsvFileIntoMatrix(string path)
+        private string[][] ReadTsvFileIntoMatrix(string path)
         {
             // read the file
             string[] lines = File.ReadAllLines(path);
 
-            int numRows = lines.Length;
-            int numCols = lines[0].Split('\t').Length;
+            // save the variables
+            variables = lines[0].Split('\t');
 
-            string[,] matrix = new string[numRows, numCols];
+            // TODO: recognize which variables are quantitative and set them as such
 
-            for (int i = 0; i < numRows; i++)
+            // memorize the parameters
+            numRows = lines.Length;
+            numCols = variables.Length;
+
+            // save every row inside the matrix
+            matrix = new string[numRows][];
+            for (int i = 1; i < numRows; i++)
             {
                 string[] splits = lines[i].Split('\t');
-                for (int j = 0; j < numCols; j++)
-                {
-                    matrix[i, j] = splits[j];
-                }
+                matrix[i - 1] = splits;
             }
+            matrix[numRows-1] = lines[numRows-1].Split('\t');
 
             return matrix;
         }
@@ -44,13 +63,8 @@ namespace hw2
         {
             matrix = ReadTsvFileIntoMatrix("Professional Life - Sheet1.tsv");
 
-            numCols = matrix.GetLength(1);
-            numRows = matrix.GetLength(0);
-
-            for (int j = 1; j < numCols; j++)
-            {
-                comboBoxUnivaried.Items.Add(matrix[0, j]);
-            }
+            foreach (var variable in variables)
+                comboBoxUnivaried.Items.Add(variable);
 
             buttonuUnivaried.Enabled = true;
             buttonMultivaried.Enabled = true;
@@ -61,9 +75,9 @@ namespace hw2
         private void buttonUnivaried_Click(object sender, EventArgs e)
         {
             // TODO: make it so you can select these
-            string[] var = { comboBoxUnivaried.SelectedItem.ToString() };
+            string[] selectedVariable = { comboBoxUnivaried.SelectedItem.ToString() };
 
-            Dictionary<string, int> distribution = evalDistribution(var);
+            var distribution = evalDistribution(selectedVariable);
 
             printDistribution(distribution);
         }
@@ -87,44 +101,41 @@ namespace hw2
 
         private void buttonMultivaried_Click(object sender, EventArgs e)
         {
-            string[] variables = textBoxMultivaried.Text.Split(',').Select(variable => variable.Trim()).ToArray();
+            string[] selectedVariables = textBoxMultivaried.Text.Split(',').Select(variable => variable.Trim()).ToArray();
 
-            if (variables[0] == "")
+            if (selectedVariables[0] == "")
                 return;
 
-            Dictionary<string, int> jointDistribution = evalDistribution(variables);
+            Dictionary<string, int> jointDistribution = evalDistribution(selectedVariables);
 
             printDistribution(jointDistribution);
         }
 
         // works for multivaried and univaried
-        private Dictionary<string, int> evalDistribution(string[] variables)
+        private Dictionary<string, int> evalDistribution(string[] selectedVariables)
         {
             jointDistribution = new Dictionary<string, int>();
 
-            int[] varColumns = new int[variables.Length];
-            for (int i = 0; i < variables.Length; i++)
+            int[] variableIndexes = new int[selectedVariables.Length];
+            for (int i = 0; i < selectedVariables.Length; i++)
             {
                 for (int j = 0; j < numCols; j++)
                 {
-                    if (matrix[0, j] == variables[i])
+                    if (variables[j] == selectedVariables[i])
                     {
-                        varColumns[i] = j;
+                        variableIndexes[i] = j;
                         break;
                     }
                 }
             }
 
-            string[][] valuesMatrix = new string[varColumns.Length][];
+            string[][] valuesMatrix = new string[variableIndexes.Length][];
             string jointValue;
 
-            for (int i = 1; i < numRows; i++)
+            for (int currentRow = 0; currentRow < numRows; currentRow++)
             {
-                valuesMatrix[0] = matrix[i, varColumns[0]].ToLower().Trim('"').Trim(' ').Trim(',').Split(',');
-                for (int k = 1; k < varColumns.Length; k++)
-                {
-                    valuesMatrix[k] = matrix[i, varColumns[k]].ToLower().Trim('"').Trim(' ').Trim(',').Split(',');
-                }
+                for (int i = 0; i < variableIndexes.Length; i++)
+                    valuesMatrix[i] = matrix[currentRow][variableIndexes[i]].ToLower().Trim('"').Trim(' ').Trim(',').Split(',')
 
                 var combinations = CartesianProduct(valuesMatrix);
                 foreach (var combination in combinations)
