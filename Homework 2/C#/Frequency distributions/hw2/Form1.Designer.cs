@@ -29,112 +29,154 @@
         private void InitializeComponent()
         {
             buttonGetTsvFile = new Button();
-            textBox1 = new TextBox();
-            comboBoxUnivaried = new ComboBox();
-            buttonuUnivaried = new Button();
-            groupBox1 = new GroupBox();
-            buttonMultivaried = new Button();
-            groupBox2 = new GroupBox();
-            textBoxMultivaried = new TextBox();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
+            buttonEval = new Button();
+            comboBoxVariable = new ComboBox();
+            buttonAddVariable = new Button();
+            textBoxSelected = new TextBox();
+            label1 = new Label();
+            label2 = new Label();
+            buttonRemove = new Button();
+            label3 = new Label();
+            textBoxIntervals = new TextBox();
+            dataGridViewResult = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewResult).BeginInit();
             SuspendLayout();
             // 
             // buttonGetTsvFile
             // 
-            buttonGetTsvFile.Location = new Point(57, 25);
+            buttonGetTsvFile.Location = new Point(40, 41);
+            buttonGetTsvFile.Margin = new Padding(3, 2, 3, 2);
             buttonGetTsvFile.Name = "buttonGetTsvFile";
-            buttonGetTsvFile.Size = new Size(94, 29);
+            buttonGetTsvFile.Size = new Size(140, 45);
             buttonGetTsvFile.TabIndex = 0;
             buttonGetTsvFile.Text = "Get .tsv file";
             buttonGetTsvFile.UseVisualStyleBackColor = true;
             buttonGetTsvFile.Click += buttonGetTsvFile_Click;
             // 
-            // textBox1
+            // buttonEval
             // 
-            textBox1.AcceptsReturn = true;
-            textBox1.Location = new Point(57, 176);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.ScrollBars = ScrollBars.Vertical;
-            textBox1.Size = new Size(722, 248);
-            textBox1.TabIndex = 1;
+            buttonEval.Enabled = false;
+            buttonEval.Location = new Point(721, 23);
+            buttonEval.Margin = new Padding(3, 2, 3, 2);
+            buttonEval.Name = "buttonEval";
+            buttonEval.Size = new Size(135, 23);
+            buttonEval.TabIndex = 3;
+            buttonEval.Text = "Eval distribution";
+            buttonEval.UseVisualStyleBackColor = true;
+            buttonEval.Click += buttonEval_Click;
             // 
-            // comboBoxUnivaried
+            // comboBoxVariable
             // 
-            comboBoxUnivaried.Enabled = false;
-            comboBoxUnivaried.FormattingEnabled = true;
-            comboBoxUnivaried.Location = new Point(11, 26);
-            comboBoxUnivaried.Name = "comboBoxUnivaried";
-            comboBoxUnivaried.Size = new Size(151, 28);
-            comboBoxUnivaried.TabIndex = 2;
+            comboBoxVariable.Cursor = Cursors.Hand;
+            comboBoxVariable.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxVariable.Enabled = false;
+            comboBoxVariable.FormattingEnabled = true;
+            comboBoxVariable.Location = new Point(285, 23);
+            comboBoxVariable.Margin = new Padding(3, 2, 3, 2);
+            comboBoxVariable.Name = "comboBoxVariable";
+            comboBoxVariable.Size = new Size(183, 23);
+            comboBoxVariable.TabIndex = 2;
             // 
-            // buttonuUnivaried
+            // buttonAddVariable
             // 
-            buttonuUnivaried.Enabled = false;
-            buttonuUnivaried.Location = new Point(574, 34);
-            buttonuUnivaried.Name = "buttonuUnivaried";
-            buttonuUnivaried.Size = new Size(193, 29);
-            buttonuUnivaried.TabIndex = 3;
-            buttonuUnivaried.Text = "Get variable distribution";
-            buttonuUnivaried.UseVisualStyleBackColor = true;
-            buttonuUnivaried.Click += buttonUnivaried_Click;
+            buttonAddVariable.Location = new Point(474, 23);
+            buttonAddVariable.Name = "buttonAddVariable";
+            buttonAddVariable.Size = new Size(121, 24);
+            buttonAddVariable.TabIndex = 2;
+            buttonAddVariable.Text = "Add variable";
+            buttonAddVariable.UseVisualStyleBackColor = true;
+            buttonAddVariable.Click += buttonAddVariable_Click;
             // 
-            // groupBox1
+            // textBoxSelected
             // 
-            groupBox1.Controls.Add(comboBoxUnivaried);
-            groupBox1.Location = new Point(399, 8);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(380, 70);
-            groupBox1.TabIndex = 1;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Univaried distribution";
+            textBoxSelected.Location = new Point(285, 53);
+            textBoxSelected.Name = "textBoxSelected";
+            textBoxSelected.ReadOnly = true;
+            textBoxSelected.Size = new Size(571, 23);
+            textBoxSelected.TabIndex = 2;
             // 
-            // buttonMultivaried
+            // label1
             // 
-            buttonMultivaried.Enabled = false;
-            buttonMultivaried.Location = new Point(574, 110);
-            buttonMultivaried.Name = "buttonMultivaried";
-            buttonMultivaried.Size = new Size(193, 29);
-            buttonMultivaried.TabIndex = 5;
-            buttonMultivaried.Text = "Get variable distribution";
-            buttonMultivaried.UseVisualStyleBackColor = true;
-            buttonMultivaried.Click += buttonMultivaried_Click;
+            label1.AutoSize = true;
+            label1.Location = new Point(196, 26);
+            label1.Name = "label1";
+            label1.Size = new Size(82, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Select variable";
             // 
-            // groupBox2
+            // label2
             // 
-            groupBox2.Controls.Add(textBoxMultivaried);
-            groupBox2.Location = new Point(399, 84);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(380, 70);
-            groupBox2.TabIndex = 4;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Multivaried distribution";
+            label2.AutoSize = true;
+            label2.Location = new Point(196, 56);
+            label2.Name = "label2";
+            label2.Size = new Size(51, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Selected";
             // 
-            // textBoxMultivaried
+            // buttonRemove
             // 
-            textBoxMultivaried.Location = new Point(11, 28);
-            textBoxMultivaried.Name = "textBoxMultivaried";
-            textBoxMultivaried.Size = new Size(151, 27);
-            textBoxMultivaried.TabIndex = 6;
+            buttonRemove.Enabled = false;
+            buttonRemove.Location = new Point(601, 23);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(114, 24);
+            buttonRemove.TabIndex = 6;
+            buttonRemove.Text = "Remove latest";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(196, 88);
+            label3.Name = "label3";
+            label3.Size = new Size(85, 15);
+            label3.TabIndex = 7;
+            label3.Text = "Select intervals";
+            // 
+            // textBoxIntervals
+            // 
+            textBoxIntervals.BackColor = SystemColors.Window;
+            textBoxIntervals.ForeColor = Color.Gray;
+            textBoxIntervals.Location = new Point(285, 85);
+            textBoxIntervals.Name = "textBoxIntervals";
+            textBoxIntervals.Size = new Size(571, 23);
+            textBoxIntervals.TabIndex = 8;
+            textBoxIntervals.GotFocus += textBoxIntervals_GotFocus;
+            textBoxIntervals.LostFocus += textBoxIntervals_LostFocus;
+            // 
+            // dataGridViewResult
+            // 
+            dataGridViewResult.AllowUserToAddRows = false;
+            dataGridViewResult.AllowUserToDeleteRows = false;
+            dataGridViewResult.AllowUserToOrderColumns = true;
+            dataGridViewResult.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewResult.Location = new Point(12, 123);
+            dataGridViewResult.Name = "dataGridViewResult";
+            dataGridViewResult.ReadOnly = true;
+            dataGridViewResult.RowTemplate.Height = 25;
+            dataGridViewResult.Size = new Size(844, 335);
+            dataGridViewResult.TabIndex = 9;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(buttonMultivaried);
-            Controls.Add(groupBox2);
-            Controls.Add(buttonuUnivaried);
-            Controls.Add(textBox1);
+            ClientSize = new Size(874, 470);
+            Controls.Add(dataGridViewResult);
+            Controls.Add(textBoxIntervals);
+            Controls.Add(label3);
+            Controls.Add(buttonRemove);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(buttonAddVariable);
+            Controls.Add(buttonEval);
+            Controls.Add(comboBoxVariable);
+            Controls.Add(textBoxSelected);
             Controls.Add(buttonGetTsvFile);
-            Controls.Add(groupBox1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Form1";
-            groupBox1.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewResult).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -142,12 +184,15 @@
         #endregion
 
         private Button buttonGetTsvFile;
-        private TextBox textBox1;
-        private ComboBox comboBoxUnivaried;
-        private Button buttonuUnivaried;
-        private GroupBox groupBox1;
-        private Button buttonMultivaried;
-        private GroupBox groupBox2;
-        private TextBox textBoxMultivaried;
+        private Button buttonEval;
+        private ComboBox comboBoxVariable;
+        private Button buttonAddVariable;
+        private TextBox textBoxSelected;
+        private Label label1;
+        private Label label2;
+        private Button buttonRemove;
+        private Label label3;
+        private TextBox textBoxIntervals;
+        private DataGridView dataGridViewResult;
     }
 }
