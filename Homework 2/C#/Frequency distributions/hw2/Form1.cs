@@ -2,17 +2,21 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Runtime.CompilerServices;
 using System.Data;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms.VisualStyles;
 
 namespace hw2
 {
     public partial class Form1
     {
-        private string[][] matrix;
+        private Dictionary<string, bool> variables;
+        private Dictionary<string, string[]> entries;
+
         private int numCols;
         private int numRows;
 
-        private Variable[] variables;
         private string[] selectedVariables;
+        private int[] classIntervals;
 
         private string selectIntervalsDefaultText = "Enter the amount of desired intervals for each quantitative variable, in order, separated by commas";
 
@@ -22,48 +26,51 @@ namespace hw2
             InitializeComponent();
         }
 
-        private string[][] ReadTsvFileIntoMatrix(string path)
+        private void ReadTsvFileIntoDict(string path)
         {
             // read the file
             string[] lines = File.ReadAllLines(path);
 
-            // save the variables, except the first one (stat ID)
-            string[] variableLabels = lines[0].Split('\t').ToArray();
+            string[] variableLabels = lines.First().Split('\t').ToArray();
             string[] isQuantitativeValues = lines[3].Split('\t').ToArray();
-            variables = new Variable[variableLabels.Length];
 
-            // gets the variables and if they are quantitative or not
-            string label;
-            bool isQuantitative;
-            for (int i = 0; i < variables.Length; i++)
-            {
-                label = variableLabels[i];
-                isQuantitative = int.TryParse(isQuantitativeValues[i], out int dummy);
-
-                variables[i] = new Variable(label, isQuantitative);
-            }
-
-            // memorize the parameters
             numRows = lines.Length;
-            numCols = variables.Length;
+            numCols = variableLabels.Length;
 
-            // save every row inside the matrix
-            matrix = new string[numRows][];
-            for (int i = 1; i < numRows; i++)
+            entries = new Dictionary<string, string[]>();
+            variables = new Dictionary<string, bool>();
+
+            for(int i = 0; i < numCols; i++)
             {
-                matrix[i - 1] = lines[i].Split('\t');
+                entries[variableLabels[i]] = new string[numRows];
+                variables.Add(variableLabels[i], int.TryParse(isQuantitativeValues[i], out int dummy));
             }
-            matrix[numRows - 1] = lines[numRows - 1].Split('\t');
 
-            return matrix;
+            string[] values;
+            for (int i = 1; i < lines.Length; i++)
+            {
+                values = lines[i].Split("\t");
+                for (int j = 0; j < values.Length; j++)
+                {
+                    entries[entries.ElementAt(j).Key][i-1] = values[j];
+                }
+            }
+
+            values = lines[lines.Length - 1].Split('\t');
+            for (int j = 0; j < values.Length; j++)
+            {
+                entries[entries.ElementAt(j).Key][lines.Length - 1] = values[j];
+            }
         }
 
         private void buttonGetTsvFile_Click(object sender, EventArgs e)
         {
-            matrix = ReadTsvFileIntoMatrix("Professional Life - Sheet1.tsv");
+            //ReadTsvFileIntoMatrix("Professional Life - Sheet1.tsv");
 
-            foreach (var variable in variables)
-                comboBoxVariable.Items.Add(variable.name);
+            ReadTsvFileIntoDict("Professional Life - Sheet1.tsv");
+
+            foreach (string variable in entries.Keys)
+                comboBoxVariable.Items.Add(variable);
 
             comboBoxVariable.Enabled = true;
             comboBoxVariable.SelectedIndex = 0;
@@ -72,50 +79,37 @@ namespace hw2
             textBoxIntervals.Text = "Enter the amount of desired intervals for each quantitative variable, in order, separated by commas";
         }
 
-        private void PrintDistribution(Dictionary<string, int> distribution)
+        private void NewPrintDistribution(Dictionary<string, int> distribution)
         {
+            dataGridViewResult.Rows.Clear();
+            dataGridViewResult.Columns.Clear();
+
             int entries = distribution.Values.Sum();
-
-            var dataTable = new DataTable();
-            foreach(string variable in selectedVariables)
+            foreach (string variable in selectedVariables)
             {
-                dataTable.Columns.Add(variable);
+                dataGridViewResult.Columns.Add(variable, variable);
             }
-            dataTable.Columns.Add("Absolute Frequency");
-            dataTable.Columns.Add("Relative Frequency");
-            dataTable.Columns.Add("Percentage Frequency");
+            dataGridViewResult.Columns.Add("Absolute Frequency", "Absolute Frequency");
+            dataGridViewResult.Columns.Add("Relative Frequency", "Relative Frequency");
+            dataGridViewResult.Columns.Add("Percentage Frequency", "Percentage Frequency");  
 
-            decimal relativeFreq;
-            decimal percentageFreq;
-            DataRow row;
             foreach (KeyValuePair<string, int> kvp in distribution)
             {
-                relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 4);
-                percentageFreq = Math.Round(relativeFreq * 100, 2);
-
-                row = dataTable.NewRow();
+                decimal relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 4);
+                decimal percentageFreq = Math.Round(relativeFreq * 100, 2);
 
                 string[] keys = kvp.Key.Split(", ");
+                string[] values = new string[keys.Length + 3];
                 for(int i = 0; i < keys.Length; i++)
                 {
-                    row[selectedVariables[i]] = keys[i];
+                    values[i] = keys[i];
                 }
-                row["Absolute Frequency"] = kvp.Value;
-                row["Relative Frequency"] = relativeFreq;
-                row["Percentage Frequency"] = $"{percentageFreq}%";
+                values[keys.Length] = $"{kvp.Value}";
+                values[keys.Length + 1] = $"{relativeFreq}";
+                values[keys.Length + 2] = $"{percentageFreq}%";
 
-                dataTable.Rows.Add(row);
+                dataGridViewResult.Rows.Add(values);
             }
-            dataGridViewResult.DataSource = dataTable;
-        }
-
-        private int FindColumnByVariableName(string varName)
-        {
-            for (int i = 0; i < variables.Length; i++)
-            {
-                if (variables[i].name == varName) return i;
-            }
-            return -1;
         }
 
         private void buttonEval_Click(object sender, EventArgs e)
@@ -125,23 +119,26 @@ namespace hw2
             if (selectedVariables.Length == 0)
                 return;
 
-            Dictionary<string, int> jointDistribution = EvalDistribution(selectedVariables);
+            if (textBoxIntervals.Text.Trim() != selectIntervalsDefaultText)
+                classIntervals = textBoxIntervals.Text.Split(", ").Select(interval => int.Parse(interval)).ToArray();
 
-            PrintDistribution(jointDistribution);
+            Dictionary<string, int> jointDistribution = NewEvalDistribution(selectedVariables, classIntervals);
+
+            NewPrintDistribution(jointDistribution);
         }
-
-        private string[][] InsertClassIntervals(string[][] inMatrix, int col, int k)
+        
+        private string[][] NewInsertClassIntervals(string[][] inMatrix, int indexInValuesMatrix, string variableLabel, int k)
         {
             // exclude not parsable variables (for simplicity)
-            int[] columnValues = new int[inMatrix.GetLength(0)];
-            for (int i = 0; i < inMatrix.GetLength(0); i++)
+            int[] variableValues = new int[entries[variableLabel].Length];
+            for (int i = 0; i < entries[variableLabel].Length; i++)
             {
-                int.TryParse(inMatrix[i][col], out columnValues[i]);
+                int.TryParse(entries[variableLabel][i], out variableValues[i]);
             }
 
             // find the bounds of the intervals
-            int min = columnValues.Min();
-            int max = columnValues.Max();
+            int min = variableValues.Min();
+            int max = variableValues.Max();
 
             // calculate the step for the intervals
             int intervalStep = (max - min) / k;
@@ -151,9 +148,9 @@ namespace hw2
 
             // this bool is to make sure that every variable gets an interval
             bool foundInterval;
-            for (int i = 0; i < inMatrix.Length; i++)
+            for (int i = 0; i < inMatrix[indexInValuesMatrix].Length; i++)
             {
-                if (!int.TryParse(inMatrix[i][col], out int value)) continue;
+                if (!int.TryParse(inMatrix[indexInValuesMatrix][i], out int value)) continue;
 
                 // find the interval of the value
                 foundInterval = false;
@@ -162,67 +159,50 @@ namespace hw2
                     if (value <= min + intervalStep * j)
                     {
                         // insert the class interval
-                        inMatrix[i][col] = $"{variables[col].name}[{min + intervalStep * (j - 1)} - {min + intervalStep * j}]";
+                        inMatrix[indexInValuesMatrix][i] = $"{variableLabel}[{min + intervalStep * (j - 1)} - {min + intervalStep * j}]";
                         foundInterval = true;
                         break;
                     }
                 }
                 // if the variable is too far ahead, place it on the last interval
-                if (!foundInterval) inMatrix[i][col] = $"{variables[col].name}[{min + intervalStep * k} - {min + intervalStep * (k + 1)}]";
+                if (!foundInterval) inMatrix[indexInValuesMatrix][i] = $"{variableLabel}[{min + intervalStep * k} - {min + intervalStep * (k + 1)}]";
             }
             return inMatrix;
         }
 
-        // works for univaried and multivaried of k variables
-        private Dictionary<string, int> EvalDistribution(string[] selectedVariables)
+        private Dictionary<string, int> NewEvalDistribution(string[] selectedVariables, int[] classIntervals = null)
         {
             // prepare the new variable
             jointDistribution = new Dictionary<string, int>();
 
-            // find every column index for every variable faster checks later on
-            int[] variableColumns = new int[selectedVariables.Length];
-            for (int i = 0; i < selectedVariables.Length; i++)
-            {
-                variableColumns[i] = FindColumnByVariableName(selectedVariables[i]);
-            }
-
-            // copy the actual matrix into a dummy one
-            string[][] processedMatrix = CloneMatrix(matrix);
-
-            // check textbox to see if the user specified any intervals or not
-            int[] classIntervals = null;
-            if (textBoxIntervals.Text.Trim() != selectIntervalsDefaultText)
-            {
-                classIntervals = textBoxIntervals.Text.Split(", ").Select(interval => int.Parse(interval)).ToArray();
-            }
-
-            // if none are specified, skip
-            if (classIntervals != null)
-            {
-                // check if there are quantitative variables, if there are and there is a specified class interval, operate accordingly
-                int intervalIndex = 0;
-                for (int i = 0; i < variableColumns.Length; i++)
-                {
-                    // if a variable is quantitative and the class interval is senseful, insert the class interval
-                    if (variables[variableColumns[i]].isQuantitative && classIntervals[intervalIndex] != 0 && classIntervals[intervalIndex] != 1)
-                    {
-                        processedMatrix = InsertClassIntervals(processedMatrix, variableColumns[i], classIntervals[intervalIndex]);
-                        intervalIndex++; // this is because intervals are not the same index as i
-                    }
-                    else continue;
-                }
-            }
-
-            // actually calculate the joint distribution
-            string[][] valuesMatrix = new string[variableColumns.Length][];
             string jointValue;
-            // for each statistical unit
-            for (int currentRow = 0; currentRow < numRows; currentRow++)
-            {
-                for (int i = 0; i < variableColumns.Length; i++)
-                    valuesMatrix[i] = processedMatrix[currentRow][variableColumns[i]].ToLower().Trim().Split(',').Select(s => string.IsNullOrEmpty(s) ? "N.A" : s.Trim()).ToArray();
+            string[][] valuesMatrix;
 
-                // calculate the cartesian product of the matrix
+            for(int i = 0; i < numRows; i++)
+            {
+                valuesMatrix = new string[selectedVariables.Length][];
+                for(int j = 0; j < selectedVariables.Length; j++)
+                {
+                    valuesMatrix[j] = entries[selectedVariables[j]][i].Split(',').Select(s => string.IsNullOrEmpty(s) ? "(empty)" : s.Trim().ToLower()).ToArray();
+                }
+
+                // if none are specified, skip
+                if (classIntervals != null)
+                {
+                    // check if there are quantitative variables, if there are and there is a specified class interval, operate accordingly
+                    int intervalIndex = 0;
+                    for (int j = 0; j < selectedVariables.Length; j++)
+                    {
+                        // if a variable is quantitative and the class interval is senseful, insert the class interval
+                        if (variables[selectedVariables[j]] && classIntervals[intervalIndex] != 0 && classIntervals[intervalIndex] != 1)
+                        {
+                            valuesMatrix = NewInsertClassIntervals(valuesMatrix, j, selectedVariables[j], classIntervals[intervalIndex]);
+                            intervalIndex++; // this is because intervals are not the same index as i
+                        }
+                        else continue;
+                    }
+                }
+
                 var combinations = CartesianProduct(valuesMatrix);
                 foreach (var combination in combinations)
                 {
@@ -235,21 +215,6 @@ namespace hw2
 
             // order the distibution by frequency
             return jointDistribution.OrderByDescending(f => f.Value).ToDictionary(f => f.Key, f => f.Value);
-        }
-
-        // for the deep cloning of the matrix
-        public static string[][]? CloneMatrix(string[][] source)
-        {
-            if (source == null) return default;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                formatter.Serialize(stream, source);
-                stream.Seek(0, SeekOrigin.Begin);
-                return formatter.Deserialize(stream) as string[][];
-            }
         }
 
         private static IEnumerable<string[]> CartesianProduct(string[][] items)

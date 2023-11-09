@@ -247,8 +247,8 @@ namespace Attacks_on_systems
             if (results.Count <= _SYSTEMS_COUNT) return;
 
             // save min and max score as references
-            float minScore = results.Min(result => result.result);
-            float maxScore = results.Max(result => result.result);
+            float minScore = results.Min(r => r.result);
+            float maxScore = results.Max(r => r.result);
 
             // calculate the number of rectangles to draw
             int boxes = Math.Max(5, results.Count/10);
@@ -365,7 +365,6 @@ namespace Attacks_on_systems
             }
             pictureBox.Invalidate();
         }
-        
 
         private Rectangle topLeftCorner
         {

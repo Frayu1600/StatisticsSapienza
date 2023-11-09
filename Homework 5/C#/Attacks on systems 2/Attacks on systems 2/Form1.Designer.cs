@@ -42,18 +42,21 @@
             // 
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.Location = new Point(0, 0);
+            pictureBox.Margin = new Padding(3, 2, 3, 2);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(1301, 1055);
+            pictureBox.Size = new Size(1138, 791);
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             // 
             // trackBarP
             // 
-            trackBarP.Location = new Point(123, 5);
+            trackBarP.Location = new Point(68, 4);
+            trackBarP.Margin = new Padding(3, 2, 3, 2);
             trackBarP.Name = "trackBarP";
-            trackBarP.Size = new Size(166, 56);
+            trackBarP.Size = new Size(185, 45);
             trackBarP.TabIndex = 2;
+            trackBarP.TickStyle = TickStyle.None;
             trackBarP.Value = 5;
             trackBarP.Scroll += trackBarP_Scroll;
             // 
@@ -65,30 +68,31 @@
             // labelP
             // 
             labelP.AutoSize = true;
-            labelP.Location = new Point(306, 19);
+            labelP.Location = new Point(268, 14);
             labelP.Name = "labelP";
-            labelP.Size = new Size(78, 20);
+            labelP.Size = new Size(61, 15);
             labelP.TabIndex = 3;
             labelP.Text = "lambda = ";
             // 
             // labelAttacks
             // 
             labelAttacks.AutoSize = true;
-            labelAttacks.Location = new Point(306, 45);
+            labelAttacks.Location = new Point(268, 34);
             labelAttacks.Name = "labelAttacks";
-            labelAttacks.Size = new Size(164, 20);
+            labelAttacks.Size = new Size(131, 15);
             labelAttacks.TabIndex = 4;
             labelAttacks.Text = "Simulating system # of ";
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1301, 1055);
+            ClientSize = new Size(1138, 791);
             Controls.Add(labelAttacks);
             Controls.Add(labelP);
             Controls.Add(trackBarP);
             Controls.Add(pictureBox);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();

@@ -36,6 +36,7 @@ namespace Attacks_on_systems
         private float xStep;
         private float relativeAndNormalizedScaleFactor;
         private int chartNumberDistanceFactor;
+        private int labelDistanceFactor;
 
         public readonly chartType ct;
 
@@ -89,6 +90,7 @@ namespace Attacks_on_systems
 
             this.chartNumberDistanceFactor = CalcChartNumberDistanceFactor();
             this.relativeAndNormalizedScaleFactor = CalcRelativeAndNormalizedScaleFactor();
+            this.labelDistanceFactor = CalcLabelDistanceFactor();
 
             this.isResizing = false;
             this.isMoving = false;
@@ -116,6 +118,11 @@ namespace Attacks_on_systems
         private int CalcChartNumberDistanceFactor()
         {
             return _ATTACKS / 10;
+        }
+
+        private int CalcLabelDistanceFactor()
+        {
+            return CalcChartNumberDistanceFactor() / 2;
         }
 
         public void ResizeableRectangle_MouseUp(object? sender, MouseEventArgs e)
@@ -185,7 +192,7 @@ namespace Attacks_on_systems
                     for(int i = 0; i <= _T; i += _T/_N)
                     {
                         x = rect.Left + i * xStep;
-                        g.DrawLine(Pens.Red, x, rect.Top, x, rect.Bottom);
+                        //g.DrawLine(Pens.Red, x, rect.Top, x, rect.Bottom);
                     }
                 }
 
@@ -205,19 +212,19 @@ namespace Attacks_on_systems
                 g.DrawRectangle(Pens.LightGray, this.bottomLeftCorner);
                 g.DrawRectangle(Pens.LightGray, this.bottomRightCorner);
 
-                // draw labels
+                // draw labels   
                 g.DrawString("Attacks",
                     Control.DefaultFont,
                     Brushes.Black,
                     this.HalfwayXPoint - (xStep / 2),
-                    rect.Bottom + (40*yStep)
+                    rect.Bottom + (labelDistanceFactor * yStep)
                 );
                 g.DrawString(ct.ToString(),
                     Control.DefaultFont,
                     Brushes.Black,
                     this.HalfwayXPoint - (2*xStep),
-                    rect.Top - (40*yStep)
-                 );      
+                    rect.Top - (labelDistanceFactor * yStep)
+                 );
             }
             pictureBox.Invalidate();
         }
