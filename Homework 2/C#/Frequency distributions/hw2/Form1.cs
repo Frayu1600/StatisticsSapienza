@@ -31,6 +31,7 @@ namespace hw2
             // read the file
             string[] lines = File.ReadAllLines(path);
 
+            // get the variable names
             string[] variableLabels = lines.First().Split('\t').ToArray();
             string[] isQuantitativeValues = lines[3].Split('\t').ToArray();
 
@@ -40,12 +41,14 @@ namespace hw2
             entries = new Dictionary<string, string[]>();
             variables = new Dictionary<string, bool>();
 
+            // create every entry for the dictionary and variables
             for(int i = 0; i < numCols; i++)
             {
                 entries[variableLabels[i]] = new string[numRows];
                 variables.Add(variableLabels[i], int.TryParse(isQuantitativeValues[i], out int dummy));
             }
 
+            // insert every value
             string[] values;
             for (int i = 1; i < lines.Length; i++)
             {
@@ -55,7 +58,7 @@ namespace hw2
                     entries[entries.ElementAt(j).Key][i-1] = values[j];
                 }
             }
-
+            // this is done because we skip the first line where variable names are memorized
             values = lines[lines.Length - 1].Split('\t');
             for (int j = 0; j < values.Length; j++)
             {
@@ -81,9 +84,11 @@ namespace hw2
 
         private void NewPrintDistribution(Dictionary<string, int> distribution)
         {
+            // clear the table from the previous print
             dataGridViewResult.Rows.Clear();
             dataGridViewResult.Columns.Clear();
 
+            // add every column
             int entries = distribution.Values.Sum();
             foreach (string variable in selectedVariables)
             {
@@ -93,11 +98,13 @@ namespace hw2
             dataGridViewResult.Columns.Add("Relative Frequency", "Relative Frequency");
             dataGridViewResult.Columns.Add("Percentage Frequency", "Percentage Frequency");  
 
+            // add every row
             foreach (KeyValuePair<string, int> kvp in distribution)
             {
                 decimal relativeFreq = Math.Round((decimal)kvp.Value / (decimal)entries, 4);
                 decimal percentageFreq = Math.Round(relativeFreq * 100, 2);
 
+                // split the joint onto different columns for readability
                 string[] keys = kvp.Key.Split(", ");
                 string[] values = new string[keys.Length + 3];
                 for(int i = 0; i < keys.Length; i++)
