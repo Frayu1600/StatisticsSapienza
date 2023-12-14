@@ -14,7 +14,7 @@ namespace Attacks_on_systems
         private int _ATTACKS;
 
         private const int _CHART_HEIGHT = 600;  //300;
-        private const int _CHART_WIDTH = 1000; //500;
+        private const int _CHART_WIDTH = 1185; //500;
         private const int _CORNER_SIZE = 7;
 
         private int _SYSTEMS_COUNT;

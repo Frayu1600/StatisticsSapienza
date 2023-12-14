@@ -253,7 +253,7 @@ namespace Attacks_on_systems
                 g.DrawRectangle(Pens.LightGray, this.bottomRightCorner);
 
                 // draw labels
-                g.DrawString("Attacks",
+                /*g.DrawString("Attacks",
                     Control.DefaultFont,
                     Brushes.Black,
                     this.HalfwayXPoint - (xStep / 2),
@@ -264,7 +264,8 @@ namespace Attacks_on_systems
                     Brushes.Black,
                     this.HalfwayXPoint - (2*xStep),
                     rect.Top - yStep
-                 );      
+                 );
+                */
             }
             pictureBox.Invalidate();
         }
